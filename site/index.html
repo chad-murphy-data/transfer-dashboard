@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transfer Credibility Dashboard</title>
 
-  <!-- optional: basic favicon -->
   <link rel="icon" href="assets/ui/favicon.svg" />
-
-  <!-- styles (you can add a real styles.css later; not required to run) -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- cache-buster for JSON fetches; replace string with your commit if you want -->
+  <!-- cache-buster for JSON fetches -->
   <script>window.APP_BUILD = "dev-" + new Date().toISOString().slice(0,19);</script>
 </head>
 <body>
@@ -60,6 +57,7 @@
           <h2 class="player-name"></h2>
           <span class="status-pill"></span>
         </div>
+
         <div class="clubs">
           <div class="club origin">
             <img class="club-logo origin-logo" alt="" src="" onerror="this.src='assets/ui/defaults/club_placeholder.png'">
@@ -87,20 +85,27 @@
           </div>
         </div>
 
+        <!-- Tweets panel (matches script.js renderTweetsSection) -->
         <details class="tweet-details">
-          <summary>Top tweet</summary>
-          <div class="tweet">
-            <a class="tweet-link" target="_blank" rel="noopener">Open</a>
-            <div class="tweet-text"></div>
-            <div class="tweet-engagement">
-              <span class="likes">♥ 0</span>
-              <span class="retweets">⇄ 0</span>
-              <span class="replies">💬 0</span>
-              <span class="quotes">❝ 0</span>
-              <span class="bookmarks">🔖 0</span>
-              <span class="views">👁 0</span>
-            </div>
+          <summary>
+            <span class="tweet-summary-label">Tweets</span>
+            <span class="tweet-count">(0)</span>
+            <span class="tweet-sort-label">• Top by <strong class="tweet-sort-chip">Engagement</strong></span>
+          </summary>
+
+          <div class="tweet-controls">
+            <label>
+              Sort by
+              <select class="tweet-sort">
+                <option value="engagement">Engagement</option>
+                <option value="newest">Newest</option>
+              </select>
+            </label>
+            <button type="button" class="tweet-expand">Show all</button>
           </div>
+
+          <div class="tweet-list" role="list"></div>
+          <button type="button" class="tweet-more" hidden>Show more</button>
         </details>
       </div>
     </article>
@@ -110,7 +115,6 @@
     <span id="buildInfo">Build: <code id="buildTag"></code></span>
   </footer>
 
-  <!-- Your app script -->
   <script src="script.js" defer></script>
 
   <noscript>
