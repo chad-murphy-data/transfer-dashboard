@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transfer Credibility Dashboard</title>
+
+  <!-- optional: basic favicon -->
+  <link rel="icon" href="assets/ui/favicon.svg" />
+
+  <!-- styles (you can add a real styles.css later; not required to run) -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- cache-buster for JSON fetches; replace string with your commit if you want -->
+  <script>window.APP_BUILD = "dev-" + new Date().toISOString().slice(0,19);</script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Transfer Credibility</h1>
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Search player or club…" aria-label="Search" />
+      <select id="statusFilter" aria-label="Filter by status">
+        <option value="">All statuses</option>
+        <option value="No Shot">No Shot (0.0)</option>
+        <option value="Ghosted">Ghosted (&lt;0.05)</option>
+        <option value="Speculative">Speculative (0.05–0.24)</option>
+        <option value="Linked">Linked (0.25–0.50)</option>
+        <option value="Advanced">Advanced (0.51–0.84)</option>
+        <option value="Imminent">Imminent (0.85–0.94)</option>
+        <option value="Confirmed">Confirmed (0.95–1.0)</option>
+      </select>
+      <label class="checkbox">
+        <input id="use7dHotness" type="checkbox" />
+        <span>Use 7-day hotness</span>
+      </label>
+      <select id="sortSelect" aria-label="Sort">
+        <option value="hotness">Sort: Hotness</option>
+        <option value="certainty">Sort: Certainty</option>
+        <option value="date">Sort: Most recent</option>
+        <option value="name">Sort: Player A→Z</option>
+      </select>
+    </div>
+  </header>
+
+  <section id="summary" class="summary">
+    <span id="clusterCount">—</span> clusters •
+    <span id="tweetCount">—</span> tweets
+  </section>
+
+  <main id="cards" class="cards" aria-live="polite"></main>
+
+  <!-- Card template -->
+  <template id="card-template">
+    <article class="card">
+      <div class="card-media">
+        <img class="player-img" alt="" src="" onerror="this.src='assets/ui/defaults/player_silhouette.png'">
+      </div>
+      <div class="card-body">
+        <div class="card-header">
+          <h2 class="player-name"></h2>
+          <span class="status-pill"></span>
+        </div>
+        <div class="clubs">
+          <div class="club origin">
+            <img class="club-logo origin-logo" alt="" src="" onerror="this.src='assets/ui/defaults/club_placeholder.png'">
+            <span class="club-name origin-name"></span>
+          </div>
+          <div class="arrow">→</div>
+          <div class="club destination">
+            <img class="club-logo destination-logo" alt="" src="" onerror="this.src='assets/ui/defaults/club_placeholder.png'">
+            <span class="club-name destination-name"></span>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">Hotness</div>
+            <div class="value hotness-value">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Certainty</div>
+            <div class="value certainty-value">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Last seen</div>
+            <div class="value last-seen">—</div>
+          </div>
+        </div>
+
+        <details class="tweet-details">
+          <summary>Top tweet</summary>
+          <div class="tweet">
+            <a class="tweet-link" target="_blank" rel="noopener">Open</a>
+            <div class="tweet-text"></div>
+            <div class="tweet-engagement">
+              <span class="likes">♥ 0</span>
+              <span class="retweets">⇄ 0</span>
+              <span class="replies">💬 0</span>
+              <span class="quotes">❝ 0</span>
+              <span class="bookmarks">🔖 0</span>
+              <span class="views">👁 0</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </article>
+  </template>
+
+  <footer class="footer">
+    <span id="buildInfo">Build: <code id="buildTag"></code></span>
+  </footer>
+
+  <!-- Your app script -->
+  <script src="script.js" defer></script>
+
+  <noscript>
+    <p>This dashboard requires JavaScript to load the data.</p>
+  </noscript>
+</body>
+</html>
