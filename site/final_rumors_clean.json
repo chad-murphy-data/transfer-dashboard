@@ -49,9 +49,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Anthony_Elanga_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/nottingham_forest.png",
+    "destination_logo_url": "assets/logos/nottingham_forest.png"
   },
   {
     "cluster_id": "62aaf8724952c7c7bfb38a9d2f4e405b",
@@ -199,9 +199,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jonathan_David_Centre-Forward.jpg",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "d41d8cd98f00b204e9800998ecf8427e",
@@ -5213,9 +5212,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "d8425c845424eea82be51cff84707e90",
@@ -5283,9 +5280,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Noni_Madueke_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "32139f18271f77e37670c030dbd608b1",
@@ -5321,9 +5318,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mateo_Retegui_Centre-Forward.jpg"
   },
   {
     "cluster_id": "deb97a759ee7b8ba42e02dddf2b412fe",
@@ -5359,9 +5354,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": "./assets/player_images/nicolas.jpg"
+    "player_image_url": "assets/player_images/Nicolas.jpg",
+    "origin_logo_url": "assets/logos/ceará_sc.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "2c867326d116998a213536bdcee2b5bc",
@@ -5413,9 +5408,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/feyenoord.png",
-    "destination_logo_url": "./assets/logos/brentford.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Antoni_Milambo_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/feyenoord.png",
+    "destination_logo_url": "assets/logos/brentford.png"
   },
   {
     "cluster_id": "836712a9097a0e6a3f9053df7e9b3622",
@@ -5499,9 +5494,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bologna.png",
-    "destination_logo_url": "./assets/logos/napoli.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Sam_Beukema_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/bologna.png",
+    "destination_logo_url": "assets/logos/napoli.png"
   },
   {
     "cluster_id": "b601344804caa16ad933ac5261274944",
@@ -5537,9 +5532,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Soumaila_Coulibaly_Centre-Back.jpg",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "eb7cb17f1598fc7289c61ceaa12323d8",
@@ -5591,9 +5585,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Denzel_Dumfries_Right-Back.jpg",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "a7dd12b1dab17d25467b0b0a4c8d4a92",
@@ -5606,7 +5599,7 @@
     "move_type": null,
     "is_renewal_or_stay": false,
     "certainty_score": 0.35,
-    "decayed_certainty": 0.0083333333333333,
+    "decayed_certainty": 0.0,
     "status_bin": "Ghosted",
     "hotness_score": 100.0,
     "hotness_7d": 2.0,
@@ -5677,9 +5670,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Show_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/fc_dallas.png"
   },
   {
     "cluster_id": "89f818401a6c260f86b30c8a965bab54",
@@ -5715,9 +5707,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/udinese.png",
-    "destination_logo_url": "./assets/logos/udinese.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Christian_Kabasele_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/udinese.png",
+    "destination_logo_url": "assets/logos/udinese.png"
   },
   {
     "cluster_id": "197b26ddb02ff0b687646c3276341406",
@@ -5817,9 +5809,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/napoli.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Noa_Lang_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/psv_eindhoven.png",
+    "destination_logo_url": "assets/logos/napoli.png"
   },
   {
     "cluster_id": "72f4686efd83581c9eb69e69c5b71726",
@@ -5887,9 +5879,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/villarreal.png",
-    "destination_logo_url": "./assets/logos/everton.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Thierno_Barry_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/villarreal.png",
+    "destination_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "caa65f1058f69fda494554a9bdf6bc88",
@@ -5989,9 +5981,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/torino.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Samuele_Ricci_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/torino.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "5b6557ac9153a9d418368278a0e0c605",
@@ -6059,9 +6051,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/cagliari.png",
-    "destination_logo_url": "./assets/logos/samsunspor.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Antoine_Makoumbou_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/cagliari.png",
+    "destination_logo_url": "assets/logos/samsunspor.png"
   },
   {
     "cluster_id": "6a19b31d83f77873613b2f8ab9d30ccc",
@@ -6129,9 +6121,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/bologna.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Federico_Bernardeschi_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/toronto_fc.png",
+    "destination_logo_url": "assets/logos/bologna.png"
   },
   {
     "cluster_id": "a9811a1fea84ed76ba167062146baf4e",
@@ -6167,9 +6159,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/ajax.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Brian_Brobbey_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/ajax.png"
   },
   {
     "cluster_id": "55fadfd036b568d4b2d5796ee444caa0",
@@ -6221,9 +6212,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/são_paulo.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "37b31e3bd6943ec542fa15f0aa054d44",
@@ -6275,9 +6265,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/villarreal.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alex_Baena_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/villarreal.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "e2481af06a5163df95ac47658854df9d",
@@ -6521,9 +6511,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Joao_Pedro_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/brighton_&_hove_albion.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "54ea88274f8dca2c6ecda8c7551f6d93",
@@ -6559,9 +6549,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Renato_Veiga_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "7ff135854376850e9711bd75ce942e07",
@@ -6645,9 +6635,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/cruzeiro.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Christian_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/cruzeiro.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "55a7ca33975b0df8746dce28399ecf33",
@@ -6715,9 +6705,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jayden_Addai_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/az_alkmaar.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "dad5840ce44580d3a549fa326e104704",
@@ -6753,9 +6743,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dante_Centre-Back.jpg",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "d7388e14d70aa29c0184592e4aef4dbf",
@@ -6791,9 +6780,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Eberechi_Eze_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/crystal_palace.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "91e3bf924a6757ffc9e132658230ac78",
@@ -6909,9 +6898,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Luis_Diaz_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "6f55883b105443d38e6ecc26ec4d7e3a",
@@ -6979,9 +6967,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/everton.png",
-    "destination_logo_url": "./assets/logos/everton.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jarrad_Branthwaite_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/everton.png",
+    "destination_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "4fd5f330286df253a6dda4ffe911075f",
@@ -7129,9 +7117,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jarell_Quansah_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "ac6060a318e091707ae0de5f2cc47e98",
@@ -7167,9 +7154,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ruben_Dias_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "14d077363cc7829e6539052045472f08",
@@ -7205,9 +7192,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mert_Komur_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/fc_augsburg.png",
+    "destination_logo_url": "assets/logos/fc_augsburg.png"
   },
   {
     "cluster_id": "4296d3efdf4a93c87f5ef20de9340b55",
@@ -7243,9 +7230,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rico_Lewis_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "a60167ae5d7cdc4d22b4f5073feab202",
@@ -7345,9 +7332,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fulham.png",
-    "destination_logo_url": "./assets/logos/fulham.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kenny_Tete_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/fulham.png",
+    "destination_logo_url": "assets/logos/fulham.png"
   },
   {
     "cluster_id": "132b94551ab153a7c4783a3501d6ea75",
@@ -7383,9 +7370,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bournemouth.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Antoine_Semenyo_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/afc_bournemouth.png"
   },
   {
     "cluster_id": "353f1e4b5f8d28b46c38c99110bd5433",
@@ -7453,9 +7439,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Olivier_Giroud_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/los_angeles_fc.png"
   },
   {
     "cluster_id": "5ec239f754973d12055e2ffccd60d0f7",
@@ -7571,9 +7556,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Matteo_Ruggeri_Left-Back.jpg",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "f4bf630f4a5e110c8922ed91f73dc86a",
@@ -7625,9 +7609,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alexandre_Lacazette_Centre-Forward.jpg"
   },
   {
     "cluster_id": "a5410ee37744c574ba5790034ea08f79",
@@ -7663,9 +7645,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/charles.jpg"
+    "player_image_url": "assets/player_images/Charles.jpg",
+    "origin_logo_url": "assets/logos/vitória_guimarães_sc.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "c87a9844f0bba0080ef6acfeed4fdf92",
@@ -7717,9 +7699,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Neco_Williams_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/nottingham_forest.png",
+    "destination_logo_url": "assets/logos/nottingham_forest.png"
   },
   {
     "cluster_id": "c0597cd5555d9f533aef19ed81dacbe7",
@@ -7771,9 +7753,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Malick_Fofana_Left_Winger.jpg",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "2e3746e131d178d04609038957bfa567",
@@ -7809,9 +7790,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/flamengo.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/flamengo.png"
   },
   {
     "cluster_id": "65427144bb2de3420ccf66945a216ff1",
@@ -7847,9 +7826,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/fenerbahce.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Milan_Skriniar_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/paris_saint-germain.png",
+    "destination_logo_url": "assets/logos/fenerbahce.png"
   },
   {
     "cluster_id": "e64c2520405852fec1d8424813ec99c5",
@@ -7917,9 +7896,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/feyenoord.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/feyenoord.png",
+    "destination_logo_url": "assets/logos/aston_villa.png"
   },
   {
     "cluster_id": "8c278462dc2f486dd9697edc17eff391",
@@ -7971,9 +7949,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": "./assets/logos/monaco.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/brentford.png",
+    "destination_logo_url": "assets/logos/as_monaco.png"
   },
   {
     "cluster_id": "1055da377d2c505f03293964a303c91b",
@@ -8040,10 +8017,7 @@
         "certainty_score": null,
         "move_type": null
       }
-    ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    ]
   },
   {
     "cluster_id": "6931a7152678e6304732dbfc1b8cfaf9",
@@ -8079,9 +8053,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jamal_Musiala_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png"
   },
   {
     "cluster_id": "da913ec9827fc6ab902ea91d97dca419",
@@ -8117,9 +8090,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Noah_Darvich_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "0610bca4647646c9ecf7e2ddaee1ba09",
@@ -8171,9 +8143,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mohammed_Kudus_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/west_ham_united.png",
+    "destination_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "b73717357625fcc60ecd681544508e59",
@@ -8257,9 +8229,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/besiktas.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Tammy_Abraham_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/as_roma.png",
+    "destination_logo_url": "assets/logos/besiktas.png"
   },
   {
     "cluster_id": "767a58c7e5e3880dadfe1180ac295f51",
@@ -8295,9 +8267,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/lazio.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Loum_Tchaouna_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/lazio.png"
   },
   {
     "cluster_id": "85260891c082b6d9c533c12b5d81e000",
@@ -8333,9 +8304,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/lens.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Facundo_Medina_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/lens.png",
+    "destination_logo_url": "assets/logos/olympique_marseille.png"
   },
   {
     "cluster_id": "28d82309e2b4e94c1a417f463a805aad",
@@ -8419,9 +8390,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jesus_Rodriguez_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/real_betis.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "24dbccbf680599a0360eca3e73743229",
@@ -8489,9 +8460,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Marcus_Rashford_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/aston_villa.png",
+    "destination_logo_url": "assets/logos/aston_villa.png"
   },
   {
     "cluster_id": "2da4b607f58f75754e3a456969563815",
@@ -8719,9 +8690,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Franco_Mastantuono_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/river_plate.png",
+    "destination_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "a4862ee6fb1b9ca97cf91b6ca485ec10",
@@ -8757,9 +8728,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "9694fb18f15703bf8d394ff3ea5be19f",
@@ -8795,9 +8764,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Marc_Guehi_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/crystal_palace.png",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "2b877b4b825b48a9a0950dd5bd1f264d",
@@ -8865,9 +8834,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arouca.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jason_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/arouca.png",
+    "destination_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "d0cd2faf9d1d7059eeeb8a4340dd8edc",
@@ -8903,9 +8872,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Reinildo_Mandava_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "de6aafc3981e8b35cdc9612f16e5a001",
@@ -8957,9 +8925,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Malik_Tillman_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/psv_eindhoven.png"
   },
   {
     "cluster_id": "04847a03f72185de2b60fa201e4ae4a5",
@@ -9043,9 +9010,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "d67326a22642a324aa1b0745f2f17abb",
@@ -9081,9 +9047,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/jorge.jpg"
+    "player_image_url": "assets/player_images/Jorge.jpg",
+    "origin_logo_url": "assets/logos/grêmio.png"
   },
   {
     "cluster_id": "c345f923860e0530232afe5812c53118",
@@ -9167,9 +9132,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Viktor_Gyokeres_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/sporting_cp.png"
   },
   {
     "cluster_id": "f6182f0359f72aae12fb90d305ccf9eb",
@@ -9253,9 +9217,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/young.jpg"
+    "player_image_url": "assets/player_images/Young.jpg",
+    "origin_logo_url": "assets/logos/são_paulo.png"
   },
   {
     "cluster_id": "de452ea371c307900d4bbb0f6437f881",
@@ -9403,9 +9366,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Darwin_Nunez_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "aa8b543720b16333c399d5eb55d2a6c7",
@@ -9441,9 +9404,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/everton.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "57c772d84bc3bcc9a27f7ab6b7335818",
@@ -9719,9 +9680,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/monaco.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ansu_Fati_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/as_monaco.png"
   },
   {
     "cluster_id": "0f027e51d59abe0acdc8f457fc0cee91",
@@ -9757,9 +9718,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rodrigo_Riquelme_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png",
+    "destination_logo_url": "assets/logos/real_betis.png"
   },
   {
     "cluster_id": "d82066da0890ae64b4e7c86c4747add4",
@@ -9827,9 +9788,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Habib_Diarra_Central_Midfield.jpg"
   },
   {
     "cluster_id": "4c92f0374994394b67459ed2dd74cc53",
@@ -9865,9 +9824,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Samuel_Mbangula_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "7f301267a1b92af71543a8563919c178",
@@ -9935,9 +9894,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Timo_Werner_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/tottenham_hotspur.png",
+    "destination_logo_url": "assets/logos/new_york_red_bulls.png"
   },
   {
     "cluster_id": "0272fcc8cdc9645f10dee4d7ce4f872f",
@@ -10020,10 +9979,7 @@
         "certainty_score": 0.98,
         "move_type": null
       }
-    ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    ]
   },
   {
     "cluster_id": "d2cd04aac9450f264fbfef68d6c16ab4",
@@ -10075,9 +10031,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/genoa.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Honest_Ahanor_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/genoa.png"
   },
   {
     "cluster_id": "b1ec8ffd266e2aceee24f5aab653c556",
@@ -10177,9 +10132,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Bryan_Mbeumo_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/brentford.png",
+    "destination_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "0791aebd63066dbfefb660c804e7f388",
@@ -10279,9 +10234,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": "./assets/logos/bologna.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jadon_Sancho_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/bologna.png"
   },
   {
     "cluster_id": "d167a8b5937a99048153b450084b6341",
@@ -10381,9 +10336,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alvaro_Morata_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "48ca192d5394397a37e28e5b913dcdb5",
@@ -10435,9 +10390,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": "./assets/player_images/alisson.jpg"
+    "player_image_url": "assets/player_images/Alisson.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "b239c0f50d02ca3f3afffac2ac22b96a",
@@ -10505,9 +10460,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/napoli.png",
-    "destination_logo_url": "./assets/logos/napoli.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alex_Meret.jpg",
+    "origin_logo_url": "assets/logos/napoli.png",
+    "destination_logo_url": "assets/logos/napoli.png"
   },
   {
     "cluster_id": "e05ecd44ffc3968d07a8fa0cb6640be2",
@@ -10687,9 +10642,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nico_Williams_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/athletic.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "96f67334674bcc8dbdb9184f60926a74",
@@ -10725,9 +10680,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Gustaf_Lagerbielke_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/twente_fc.png",
+    "destination_logo_url": "assets/logos/sc_braga.png"
   },
   {
     "cluster_id": "e3db9cafa552d1c37be35c815992cdc0",
@@ -10779,9 +10734,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/lecce.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Francesco_Camarda_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/lecce.png"
   },
   {
     "cluster_id": "daec7b9f8cf96fdfd46a3b0e52fea66b",
@@ -10849,9 +10804,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ivan_Perisic_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/psv_eindhoven.png"
   },
   {
     "cluster_id": "43cc2836e2a9f47d0f01de24f1593d99",
@@ -10887,9 +10841,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/besiktas.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/David_Jurasek_Left-Back.jpg",
+    "destination_logo_url": "assets/logos/besiktas.png"
   },
   {
     "cluster_id": "35cd2d0d62d9bc5e60a3ca9f7593b05b",
@@ -10957,9 +10910,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/villarreal.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/sevilla_fc.png",
+    "destination_logo_url": "assets/logos/villarreal.png"
   },
   {
     "cluster_id": "8f56b04987d211c93714b060aac11f66",
@@ -10995,9 +10947,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Axel_Tuanzebe_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/ipswich_town.png"
   },
   {
     "cluster_id": "83d8a4244c1f61ecc86de455cab26899",
@@ -11049,9 +11000,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/southampton.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kamaldeen_Sulemana_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/southampton.png"
   },
   {
     "cluster_id": "12f77d29cb5397e5a558845634bbb457",
@@ -11311,9 +11261,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Theo_Hernandez_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "926e27eecdbc7a18858b3798ba99bddd",
@@ -11349,9 +11299,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pepe_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/fc_porto.png",
+    "destination_logo_url": "assets/logos/fc_porto.png"
   },
   {
     "cluster_id": "c5aa3124b1adad080927ce4d144c6b33",
@@ -11499,9 +11449,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/ronaldo.jpg"
+    "player_image_url": "assets/player_images/Ronaldo.jpg"
   },
   {
     "cluster_id": "620fee44416cae8b1f6ec1074cede6ac",
@@ -11537,9 +11485,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Malick_Thiaw_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "004d460079ed813936e05c6dd5f0289a",
@@ -11639,9 +11587,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Myles_Lewis-Skelly_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "3fb6587dedae0ee7ca3fafb7cd499f6e",
@@ -11885,9 +11833,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bournemouth.png",
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Milos_Kerkez_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/afc_bournemouth.png",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "c99eeddc727366445059700372c31510",
@@ -11923,9 +11871,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/villarreal.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Sergi_Cardona_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/villarreal.png"
   },
   {
     "cluster_id": "b309ff3ef5e5808b7134bcc92d354dd4",
@@ -12009,9 +11956,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Christian_Nrgaard_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/brentford.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "3adc3cf09f48b180fd54ee948d0e221d",
@@ -12047,9 +11994,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nicolas_Jackson_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "b96115bbb4b4561d86b36663e9d8a496",
@@ -12117,9 +12064,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Juma_Bah_Centre-Back.jpg",
+    "destination_logo_url": "assets/logos/ogc_nice.png"
   },
   {
     "cluster_id": "936037e77168daa775291809a569ee4a",
@@ -12155,9 +12101,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/espanyol.png",
-    "destination_logo_url": "./assets/logos/espanyol.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Roberto_Fernandez_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/espanyol.png",
+    "destination_logo_url": "assets/logos/espanyol.png"
   },
   {
     "cluster_id": "f8cd12a1012b8a8d5d14e0e597edef20",
@@ -12225,9 +12171,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Granit_Xhaka_Defensive_Midfield.jpg",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "80e6e341d132f3129b01e6c0ec2a649a",
@@ -12263,9 +12208,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/David_Raya.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "329bfdcbe22bdb494f529d49c33654f2",
@@ -12301,9 +12246,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/heidenheim.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Arijon_Ibrahimovic_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png",
+    "destination_logo_url": "assets/logos/heidenheim.png"
   },
   {
     "cluster_id": "be71d8a238a18c2480a6857c0f412b3d",
@@ -12467,9 +12412,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Luka_Modric_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/real_madrid.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "d80038a57ccde764c8f104ce7dd9ddfd",
@@ -12553,9 +12498,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Johnny_Cardoso_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/real_betis.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "3895b73e44dcfc68061bd9a7ef246366",
@@ -12591,9 +12536,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pablo_Torre_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "6c84cbd30cf9350a990bad2bcc1bec5f",
@@ -12693,9 +12638,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/genoa.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Patrick_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/rio_ave.png",
+    "destination_logo_url": "assets/logos/genoa.png"
   },
   {
     "cluster_id": "02c696ba6e35ef598c0f59e3069d3be1",
@@ -12827,9 +12772,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mike_Maignan.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "70080aa08b4fe2b66aae3baea7e4a99f",
@@ -12881,9 +12826,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/santos.png",
-    "destination_logo_url": "./assets/logos/santos.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Neymar_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/santos.png",
+    "destination_logo_url": "assets/logos/santos.png"
   },
   {
     "cluster_id": "bc7a844476607e1a59d8eb1b1f311830",
@@ -12919,9 +12864,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/ajax.png",
-    "player_image_url": "./assets/player_images/raul.jpg"
+    "player_image_url": "assets/player_images/Raul.jpg",
+    "destination_logo_url": "assets/logos/ajax.png"
   },
   {
     "cluster_id": "952cea357d6c9752ba3a8f483761c060",
@@ -12957,9 +12901,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Chiquinho_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/wolverhampton_wanderers.png"
   },
   {
     "cluster_id": "69c92cf90c0b5ac353ecba45420406b4",
@@ -12995,9 +12938,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Moses_Simon_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/fc_nantes.png",
+    "destination_logo_url": "assets/logos/fc_nantes.png"
   },
   {
     "cluster_id": "5d6f852df989b50eea5825da0204649b",
@@ -13033,9 +12976,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/monaco.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Andre_Onana.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png",
+    "destination_logo_url": "assets/logos/as_monaco.png"
   },
   {
     "cluster_id": "dd97813dd40be87559aaefed642c3fbb",
@@ -13135,9 +13078,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Igor_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/brighton_&_hove_albion.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "d2626d98ab4a04101319d72a58375b6f",
@@ -13173,9 +13116,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Bradley_Barcola_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/paris_saint-germain.png",
+    "destination_logo_url": "assets/logos/paris_saint-germain.png"
   },
   {
     "cluster_id": "301cb01998b998e7714b752310d6414d",
@@ -13211,9 +13154,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "1cf1afefd02baf69f015ba6669f9531b",
@@ -13249,9 +13190,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/benfica.png",
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Andreas_Schjelderup_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/benfica.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "7123bbc45946034bd8eb6c894e618cd0",
@@ -13319,9 +13260,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/inter.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nicola_Zalewski_Left_Midfield.jpg",
+    "destination_logo_url": "assets/logos/inter.png"
   },
   {
     "cluster_id": "fcf3c7d07159a1b9adb1f3371349d38f",
@@ -13357,9 +13297,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/marseille.png",
-    "destination_logo_url": "./assets/logos/benfica.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Amar_Dedic_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/marseille.png",
+    "destination_logo_url": "assets/logos/benfica.png"
   },
   {
     "cluster_id": "a176e3df01e4e498d6984da4e596b5a0",
@@ -13427,9 +13367,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/bournemouth.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Adrien_Truffert_Left-Back.jpg",
+    "destination_logo_url": "assets/logos/afc_bournemouth.png"
   },
   {
     "cluster_id": "e8135b0b157b953e4bdf5b21cbed531a",
@@ -13465,9 +13404,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Timothy_Weah_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "366eb9180765cb1ac00e46285f8bf646",
@@ -13551,9 +13490,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/udinese.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jaka_Bijol_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/udinese.png",
+    "destination_logo_url": "assets/logos/leeds_united.png"
   },
   {
     "cluster_id": "de3de77a901e90030923fb635abf6311",
@@ -13589,9 +13528,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/fiorentina.png",
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/fiorentina.png"
   },
   {
     "cluster_id": "b773044958299ebe20c7cb28f9beca2c",
@@ -13675,9 +13612,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Wojciech_Szczesny.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "e6fc2b934f4bfad13955fde97226fc73",
@@ -13729,9 +13666,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Frenkie_de_Jong_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "f4bb13abaf22a64c4be984ec07d0ec42",
@@ -13815,9 +13752,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Martin_Zubimendi_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/real_sociedad.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "3b221cc4569551b2cd5633499456d18c",
@@ -13869,9 +13806,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/galatasaray.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Hakan_Calhanoglu_Defensive_Midfield.jpg",
+    "destination_logo_url": "assets/logos/galatasaray.png"
   },
   {
     "cluster_id": "47b3425a7a4eec98d0119dbb0ffa2cbe",
@@ -13907,9 +13843,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bournemouth.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/afc_bournemouth.png"
   },
   {
     "cluster_id": "fae787f35f260a16797d4cbb404cfaac",
@@ -13977,9 +13911,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Thibaut_Courtois.jpg",
+    "origin_logo_url": "assets/logos/real_madrid.png",
+    "destination_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "6238df79b861210387dd95d19f49fc8d",
@@ -14271,9 +14205,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Florian_Wirtz_Attacking_Midfield.jpg",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "ed52ac169a9e99815669db48ca22c82a",
@@ -14309,9 +14242,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kylian_Mbappe_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "9e619d8ba18bd3d24eb8e81b5b9cd723",
@@ -14347,9 +14279,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/southampton.png",
-    "destination_logo_url": "./assets/logos/southampton.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Paul_Onuachu_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/southampton.png",
+    "destination_logo_url": "assets/logos/southampton.png"
   },
   {
     "cluster_id": "9a7bd8f48d697b668ac835dffc3622e0",
@@ -14449,9 +14381,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/galatasaray.png",
-    "destination_logo_url": "./assets/logos/parma.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Carlos_Cuesta_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/galatasaray.png",
+    "destination_logo_url": "assets/logos/parma.png"
   },
   {
     "cluster_id": "cea5da98e16b7a5ef7e3bd7c9c97e2e2",
@@ -14487,9 +14419,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/torino.png",
-    "destination_logo_url": "./assets/logos/napoli.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Vanja_Milinkovic-Savic.jpg",
+    "origin_logo_url": "assets/logos/torino.png",
+    "destination_logo_url": "assets/logos/napoli.png"
   },
   {
     "cluster_id": "eb32a9dc7bf5d6858b43645d3ca950ca",
@@ -14525,9 +14457,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ousmane_Diomande_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/sporting_cp.png",
+    "destination_logo_url": "assets/logos/crystal_palace.png"
   },
   {
     "cluster_id": "0aa96c5743f98e251a38a0f37b554f1e",
@@ -14595,9 +14527,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Leandro_Paredes_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/as_roma.png",
+    "destination_logo_url": "assets/logos/boca_juniors.png"
   },
   {
     "cluster_id": "6d1a9135f6547d308740c5d04b6c1105",
@@ -14649,9 +14581,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "56103d894daf32c84252df3c1eeeca82",
@@ -14687,9 +14617,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "e8d4b0c97ba2391e38addecebf075b03",
@@ -14725,9 +14653,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "2454abfbc88564ae0ede701e25c641ef",
@@ -14763,9 +14689,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/fulham.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ricardo_Pepi_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/psv_eindhoven.png",
+    "destination_logo_url": "assets/logos/fulham.png"
   },
   {
     "cluster_id": "5783b0bcb4eff68b941f8759161aa03f",
@@ -15025,9 +14951,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/espanyol.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Joan_Garcia.jpg",
+    "origin_logo_url": "assets/logos/espanyol.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "89e880f80a5221ac66b0e7d9e3f84875",
@@ -15079,9 +15005,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fenerbahce.png",
-    "destination_logo_url": "./assets/logos/fenerbahce.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Edin_Dzeko_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/fenerbahce.png",
+    "destination_logo_url": "assets/logos/fenerbahce.png"
   },
   {
     "cluster_id": "a9ac023bae91979361863fdc3f5b0060",
@@ -15133,9 +15059,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Fer_Lopez_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/celta_de_vigo.png",
+    "destination_logo_url": "assets/logos/celta_de_vigo.png"
   },
   {
     "cluster_id": "bd0ae9163e4298983d79c7b0b4265140",
@@ -15203,9 +15129,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Tom_Heaton.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png",
+    "destination_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "078c007bd92ddec308ae2f5115c1775d",
@@ -15369,9 +15295,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/hellas_verona.png"
   },
   {
     "cluster_id": "4a944f6b20b3204bdb1a72b8d3254e56",
@@ -15471,9 +15395,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kyle_Walker_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "cbfa3ca77c331b6c3e1c6797cf39c3c0",
@@ -15509,9 +15433,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Lucas_Digne_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/aston_villa.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "4d8ff79c4981bfb01855384eed9b0002",
@@ -15547,9 +15471,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bologna.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jhon_Lucumi_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/bologna.png",
+    "destination_logo_url": "assets/logos/as_roma.png"
   },
   {
     "cluster_id": "c6cc8094c2dc07b700ffcc36d64e2138",
@@ -15601,9 +15525,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/lazio.png",
-    "destination_logo_url": "./assets/logos/lazio.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pedro_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/lazio.png",
+    "destination_logo_url": "assets/logos/lazio.png"
   },
   {
     "cluster_id": "15489dd8adf3603c799487bc1bc00a72",
@@ -15751,9 +15675,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/galatasaray.png",
-    "destination_logo_url": "./assets/logos/galatasaray.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Victor_Osimhen_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/galatasaray.png",
+    "destination_logo_url": "assets/logos/galatasaray.png"
   },
   {
     "cluster_id": "a24c576554cf96ccbca23526427f5fe4",
@@ -15821,9 +15745,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mathys_Tel_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/tottenham_hotspur.png",
+    "destination_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "990a69f7f2b153b0f687ddad7b29f82f",
@@ -15907,9 +15831,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/como.png",
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Maximo_Perrone_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/como.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "bb382a42167ff8cbdde6cf51d6035b14",
@@ -16041,9 +15965,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/marseille.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Angel_Gomes_Attacking_Midfield.jpg",
+    "destination_logo_url": "assets/logos/marseille.png"
   },
   {
     "cluster_id": "5fa9ac3cda57c157dc26df3e3d39692c",
@@ -16079,9 +16002,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": "./assets/logos/brentford.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Julian_Eyestone.jpg",
+    "origin_logo_url": "assets/logos/brentford.png",
+    "destination_logo_url": "assets/logos/brentford.png"
   },
   {
     "cluster_id": "d5617f54954eb089bcf9e1737ef4bb1c",
@@ -16117,9 +16040,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Raul_Asencio_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/real_madrid.png",
+    "destination_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "529db1f8cca515c2d3c466db964515f5",
@@ -16251,9 +16174,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/benfica.png",
-    "destination_logo_url": "./assets/logos/benfica.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alvaro_Carreras_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/benfica.png",
+    "destination_logo_url": "assets/logos/benfica.png"
   },
   {
     "cluster_id": "e3e8d0566205c3db4ba53e71109a70f1",
@@ -16289,9 +16212,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Odilon_Kossounou_Centre-Back.jpg"
   },
   {
     "cluster_id": "e582277f703c84b0a559cd7d1108f161",
@@ -16327,9 +16248,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/James_Milner_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/brighton_&_hove_albion.png"
   },
   {
     "cluster_id": "40d69f63ca05d418cfd4b2bff8c99552",
@@ -16365,9 +16285,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/athletic.png"
   },
   {
     "cluster_id": "48e5b329e36432cbcfa6dd65e9ec31a5",
@@ -16403,9 +16322,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/napoli.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Juanlu_Sanchez_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/sevilla_fc.png",
+    "destination_logo_url": "assets/logos/napoli.png"
   },
   {
     "cluster_id": "7d20e2bd6f930f4f7c1722537700804a",
@@ -16601,9 +16520,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Matheus_Cunha.jpg",
+    "origin_logo_url": "assets/logos/wolverhampton_wanderers.png",
+    "destination_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "907c0a2e726079977ce3f0450ef90e47",
@@ -16751,9 +16670,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/galatasaray.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Leroy_Sane_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png",
+    "destination_logo_url": "assets/logos/galatasaray.png"
   },
   {
     "cluster_id": "c6768acae2f97ca390eaeec6ee8986c3",
@@ -16789,9 +16708,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nicolo_Savona_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "2214b86790bfb1c9ea0d6e04ecd25834",
@@ -16827,9 +16745,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Hugo_Ekitike_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/eintracht_frankfurt.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "c58128c7773c1354b6f29a3dfbd919bf",
@@ -17089,9 +17007,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kevin_De_Bruyne_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/chicago_fire_fc.png"
   },
   {
     "cluster_id": "c95e650eed60f462dea1067366318070",
@@ -17143,9 +17061,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/villarreal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alberto_Moleiro_Left_Winger.jpg",
+    "destination_logo_url": "assets/logos/villarreal.png"
   },
   {
     "cluster_id": "ece9d25a0ca68fa74ca15fa10ec04240",
@@ -17181,9 +17098,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jack_Grealish_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "49ee66a12b47632079d67fcb48fa3da1",
@@ -17219,9 +17135,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Axel_Disasi_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "d2e0159218763169ba256a1d15ab1699",
@@ -17257,9 +17172,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/ajax.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jorrel_Hato_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/ajax.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "3965ba97470bbda18b205d55caebcde4",
@@ -17311,9 +17226,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alex_Moreno_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/nottingham_forest.png"
   },
   {
     "cluster_id": "053afce6ba985e845e6bda05a985651a",
@@ -17349,9 +17263,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Raheem_Sterling_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "24cce60b451f8ba440afb2303e1adaaf",
@@ -17547,9 +17461,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Tijjani_Reijnders_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "71dfb59dce21768efe5dcc0361c70b68",
@@ -17649,9 +17563,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Yunus_Musah_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/ac_milan.png",
+    "destination_logo_url": "assets/logos/ac_milan.png"
   },
   {
     "cluster_id": "5cf24a396426b9c54e827776449791e7",
@@ -17687,9 +17601,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mathis_Amougou_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "27f7bbd7c66fd4b293a6116d08c531cc",
@@ -17725,9 +17638,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/santos.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Andrey_Santos_Central_Midfield.jpg",
+    "destination_logo_url": "assets/logos/santos.png"
   },
   {
     "cluster_id": "897d9b7148963f0907bb50d628aedf45",
@@ -17891,9 +17803,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rayan_Cherki_Right_Winger.jpg",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "dd36dfbdc6753431bc9897bde9cc3638",
@@ -17945,9 +17856,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Marcus_Bettinelli.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "73aa9edc62f801ed6e865df5f89b7210",
@@ -18047,9 +17958,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Angelino_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/as_roma.png",
+    "destination_logo_url": "assets/logos/as_roma.png"
   },
   {
     "cluster_id": "9b609283be19c6d3af0714e65c0bdd6b",
@@ -18101,9 +18012,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Luca_Marianucci_Centre-Back.jpg"
   },
   {
     "cluster_id": "7a37c1e34f30c543d947c975cc448c51",
@@ -18139,9 +18048,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Matt_Turner.jpg",
+    "origin_logo_url": "assets/logos/crystal_palace.png"
   },
   {
     "cluster_id": "603e23ab0019b01792160e5fd610bc68",
@@ -18177,9 +18085,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ionut_Radu.jpg",
+    "destination_logo_url": "assets/logos/celta_de_vigo.png"
   },
   {
     "cluster_id": "43020b050aa8bec5e8a0b3370ce91af6",
@@ -18247,9 +18154,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Benjamin_Sesko_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/rb_leipzig.png"
   },
   {
     "cluster_id": "3a280ef0f71f65589e422c03fa902302",
@@ -18429,9 +18335,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rayan_Ait-Nouri_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/wolverhampton_wanderers.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "e29d5203510a4cbf78cb981c3654f504",
@@ -18643,9 +18549,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jonathan_Tah_Centre-Back.jpg"
   },
   {
     "cluster_id": "4cc574b1b977f23abdbce8f3ff1b85a6",
@@ -18729,9 +18633,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Clement_Lenglet_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "6de260a43ab53b5231ad582b4819c776",
@@ -18767,9 +18671,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "825df9bb2a41cf7a5396ec8c3068d09c",
@@ -18805,9 +18707,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "8daeb801b44e8bf8303da5d54c23ece6",
@@ -18843,9 +18743,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mamadou_Sarr_Centre-Back.jpg",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "a055d3e58c07151395d586c006774400",
@@ -18881,9 +18780,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Robert_Lewandowski_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "d477d15349dbadf6fa27e57ff0a1a398",
@@ -18919,9 +18817,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ben_Davies_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "6060d235511e8cc2f67c66fff0b66a0d",
@@ -18957,9 +18854,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Serginho_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/cd_santa_clara.png"
   },
   {
     "cluster_id": "a7a02220538a32bbf1bd59a32f01bfcf",
@@ -19011,9 +18907,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alejandro_Garnacho_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "83a6c8fb8e054de73cb4f76c3c6f9701",
@@ -19161,9 +19056,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/inter.png",
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/inter.png"
   },
   {
     "cluster_id": "68830aef4dbfad181162f9251a1da51b",
@@ -19215,9 +19108,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/benfica.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Arthur_Right-Back.jpg",
+    "destination_logo_url": "assets/logos/benfica.png"
   },
   {
     "cluster_id": "2efb46bed4b74366a787f07e09b51a50",
@@ -19285,9 +19177,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": "./assets/logos/flamengo.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jorginho_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/flamengo.png"
   },
   {
     "cluster_id": "775a34dbdccc56d958faf3d73a704f4b",
@@ -19339,9 +19231,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/fc_porto.png"
   },
   {
     "cluster_id": "56437ee14d804bfa14762e0b1782827e",
@@ -19377,9 +19267,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/moreirense.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ismael_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/moreirense.png"
   },
   {
     "cluster_id": "2c42e5cf1cdbafea04ed267018ef1511",
@@ -19415,9 +19304,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/internacional.png",
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/ivan.jpg"
+    "player_image_url": "assets/player_images/Ivan.jpg",
+    "origin_logo_url": "assets/logos/internacional.png"
   },
   {
     "cluster_id": "b15c262e4c7ed2b28c03205b3ee4be7e",
@@ -19453,9 +19341,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Victor_Boniface_Centre-Forward.jpg"
   },
   {
     "cluster_id": "0a654a5bb1a378e6f95580b0ee055f9d",
@@ -19507,9 +19393,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/feyenoord.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/David_Hancko_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/feyenoord.png"
   },
   {
     "cluster_id": "172522ec1028ab781d9dfd17eaca4427",
@@ -19545,9 +19430,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/David_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/vasco_da_gama.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "db29ec4b8929b0d00297984dd890dd2f",
@@ -19583,9 +19468,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/cf_montréal.png"
   },
   {
     "cluster_id": "2a856bf0dfe172c6912fbc03e84d3ae2",
@@ -19621,9 +19504,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/sevilla_fc.png"
   },
   {
     "cluster_id": "d521a837a2036abdf8cc2bc9c043371f",
@@ -19659,9 +19540,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/wolverhampton_wanderers.png"
   },
   {
     "cluster_id": "5a31511fef2a3219c05edd1c30363772",
@@ -19713,9 +19592,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/lazio.png",
-    "destination_logo_url": "./assets/logos/arsenal.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nuno_Tavares_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/lazio.png",
+    "destination_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "1b429f0a79067d43067e27b14c2f0b74",
@@ -19751,9 +19630,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Lorenz_Assignon_Right-Back.jpg"
   },
   {
     "cluster_id": "e64154c5b0f007ded6953a6a8b82496e",
@@ -19789,9 +19666,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Joao_Palhinha_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png"
   },
   {
     "cluster_id": "9aa3d60c29131f7796518a1409b0e34b",
@@ -19971,9 +19847,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Liam_Delap_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/ipswich_town.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "7977f24572f17ef248d13a44eaab829b",
@@ -20009,9 +19885,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pierre_Kalulu_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "cfea3f3802dc2ec087e7914dcebc2f44",
@@ -20127,9 +20003,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Bruno_Fernandes_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "3fe01f5a58d3a38e00b288572f4a6d89",
@@ -20165,9 +20040,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Daniel_Peretz.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png",
+    "destination_logo_url": "assets/logos/psv_eindhoven.png"
   },
   {
     "cluster_id": "af30760849840b75901a585d3c23bc68",
@@ -20235,9 +20110,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Mark_Flekken.jpg",
+    "origin_logo_url": "assets/logos/brentford.png"
   },
   {
     "cluster_id": "e5cecdcca45bd76ac66006cba2023042",
@@ -20305,9 +20179,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Alex_Valle_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "7fba3f68c548216e6b1133a5abcf3799",
@@ -20343,9 +20217,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Tiago_Djalo_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/fc_porto.png",
+    "destination_logo_url": "assets/logos/crystal_palace.png"
   },
   {
     "cluster_id": "62bf43e2db266caa78d4f0bd18fb5f7e",
@@ -20381,9 +20255,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Danilo_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/nottingham_forest.png"
   },
   {
     "cluster_id": "15ee9f0a5ec3956692137f687acb97b8",
@@ -20419,9 +20292,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Koke_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "1b213c86f3c35d58a155cd8ada8fc047",
@@ -20457,9 +20330,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dario_Essugo_Defensive_Midfield.jpg",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "8832282913932c2f6da434d99100353c",
@@ -20495,9 +20367,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/benfica.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Samuel_Dahl_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/as_roma.png",
+    "destination_logo_url": "assets/logos/benfica.png"
   },
   {
     "cluster_id": "6797bdaada0ee000f1f1da063e15dc86",
@@ -20533,9 +20405,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Antoine_Griezmann_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "0a0e827db6f9899ce931ba41ca582f2b",
@@ -20587,9 +20459,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": "./assets/logos/brentford.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Caoimhin_Kelleher.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png",
+    "destination_logo_url": "assets/logos/brentford.png"
   },
   {
     "cluster_id": "072586a7c5ad57a8f833c3ce611c410d",
@@ -20657,9 +20529,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Desire_Doue_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/paris_saint-germain.png"
   },
   {
     "cluster_id": "74a0a808dc50482655762488d656b8a7",
@@ -20695,9 +20566,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/benfica.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Bernardo_Silva_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/benfica.png"
   },
   {
     "cluster_id": "527bd5b5d689e2c32ae974c6229ff785",
@@ -20765,9 +20636,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/ajax.png",
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/ajax.png"
   },
   {
     "cluster_id": "b8c068b9a6d3d746dd0e0480970636b8",
@@ -20803,9 +20672,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/lens.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kevin_Danso_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/tottenham_hotspur.png",
+    "destination_logo_url": "assets/logos/lens.png"
   },
   {
     "cluster_id": "d5a5ae3a791c55a8f0bb53ca05fd06f8",
@@ -21033,9 +20902,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jeremie_Frimpong_Right-Back.jpg",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "43ba7bbdcb28c15f96165701e063681b",
@@ -21046,7 +20914,7 @@
     "destination_club": "Chelsea",
     "normalized_destination_club": "chelsea",
     "move_type": null,
-    "is_renewal_or_stay": true,
+    "is_renewal_or_stay": false,
     "certainty_score": null,
     "decayed_certainty": null,
     "status_bin": "Confirmed",
@@ -21071,9 +20939,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Moises_Caicedo_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "d5e7815060a6e00ff197f4a498d1b591",
@@ -21109,9 +20977,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "d074abee36e0779cef4ef5eb14e44257",
@@ -21163,9 +21029,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fiorentina.png",
-    "destination_logo_url": "./assets/logos/fiorentina.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/David_de_Gea.jpg",
+    "origin_logo_url": "assets/logos/fiorentina.png",
+    "destination_logo_url": "assets/logos/fiorentina.png"
   },
   {
     "cluster_id": "b130e2e11c5beb1dd86d51b4ffc8fe20",
@@ -21201,9 +21067,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "fdfa387c1f3a68d47578cb342e8fd120",
@@ -21238,10 +21102,7 @@
         "certainty_score": 0.9,
         "move_type": null
       }
-    ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    ]
   },
   {
     "cluster_id": "ebe5716d7ccb5d82fe6c8172ac19d208",
@@ -21325,9 +21186,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": "./assets/logos/liverpool.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Trent_Alexander-Arnold_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png",
+    "destination_logo_url": "assets/logos/liverpool.png"
   },
   {
     "cluster_id": "220d8e1ddbe5d490904421ddc15154ed",
@@ -21379,9 +21240,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/benfica.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Angel_Di_Maria_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/benfica.png",
+    "destination_logo_url": "assets/logos/rosario_central.png"
   },
   {
     "cluster_id": "3332b5be927a5ef44b55526a816d6429",
@@ -21417,9 +21278,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Gabriel_Magalhaes_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "47c9e48823aca076bc02a7e953e215ba",
@@ -21455,9 +21315,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Divin_Mubama_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "aa47f8215c6f30a0dcdb2a36a9f4168e",
@@ -21509,9 +21369,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/daniel.jpg"
+    "player_image_url": "assets/player_images/Daniel.jpg",
+    "origin_logo_url": "assets/logos/san_jose_earthquakes.png"
   },
   {
     "cluster_id": "b61b04073c63037985450097c99c171b",
@@ -21547,9 +21406,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Marc_Guiu_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png",
+    "destination_logo_url": "assets/logos/ipswich_town.png"
   },
   {
     "cluster_id": "0fbd47a3817c2c3a38a15962a9f1ddd3",
@@ -21633,9 +21492,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Morgan_Gibbs-White_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/nottingham_forest.png",
+    "destination_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "d1133275ee2118be63a577af759fc052",
@@ -21687,9 +21546,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/flamengo.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/flamengo.png",
+    "destination_logo_url": "assets/logos/leeds_united.png"
   },
   {
     "cluster_id": "18dc0b7ec2a2e55e7b2ef897cc0bee92",
@@ -21741,9 +21599,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/brentford.png",
-    "destination_logo_url": "./assets/logos/fiorentina.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Michael_Kayode_Right-Back.jpg",
+    "origin_logo_url": "assets/logos/brentford.png",
+    "destination_logo_url": "assets/logos/fiorentina.png"
   },
   {
     "cluster_id": "5cc5a49bb26f6339db1b7b7f191e547c",
@@ -21779,9 +21637,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Amin_Sarr_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/hellas_verona.png",
+    "destination_logo_url": "assets/logos/hellas_verona.png"
   },
   {
     "cluster_id": "fcbc27a1f55b61610f88b0dae650c4c6",
@@ -21833,9 +21691,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ronald_Araujo_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "eeae9dbd1aa6760f6ccad500a14f1d84",
@@ -21983,9 +21840,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Lamine_Yamal_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "5d01bff024ec9468873ed74b508ab30a",
@@ -22021,9 +21878,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/ajax.png",
-    "destination_logo_url": "./assets/logos/ajax.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jordan_Henderson_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/ajax.png",
+    "destination_logo_url": "assets/logos/ajax.png"
   },
   {
     "cluster_id": "f3c3fbaa7cbc99323f009be7661f22ba",
@@ -22203,9 +22060,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/bournemouth.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dean_Huijsen_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/afc_bournemouth.png",
+    "destination_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "5e257671e8725f06e0afa30973104e58",
@@ -22241,9 +22098,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Emanuel_Emegha_Centre-Forward.jpg",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "424ceb6bb995e91fab0756012c407e66",
@@ -22279,9 +22135,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/everton.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jack_Harrison_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "2000b7287e012511c77a7b2517e838ba",
@@ -22333,9 +22188,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fortaleza.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Moises_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/fortaleza.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "03f735c1dd25b291760a92c7b76fe088",
@@ -22371,9 +22226,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Takefusa_Kubo_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/real_sociedad.png"
   },
   {
     "cluster_id": "8a4f22f428c0594ae211b21663800910",
@@ -22409,9 +22263,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Nordi_Mukiele_Right-Back.jpg"
   },
   {
     "cluster_id": "d5f3e3f0308cc29ab47daa3858fa011a",
@@ -22447,9 +22299,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "935f9c41357a90b3b71b84bedfa0d9e0",
@@ -22517,9 +22367,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "e6185335cc9945396dbc5a2b682f37da",
@@ -22683,9 +22531,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Raphinha_Left_Winger.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "3912300087e59b8ce1dbc26b9efae32f",
@@ -22737,9 +22585,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pablo_Barrios_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/atlético_de_madrid.png",
+    "destination_logo_url": "assets/logos/atlético_de_madrid.png"
   },
   {
     "cluster_id": "e1fef8a77b8a092050a6e6a63b56cbfd",
@@ -22775,9 +22623,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rasmus_Hjlund_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "f910b89bcd15d2b96bf08872895cbdfd",
@@ -22813,9 +22661,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Joshua_Zirkzee_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png",
+    "destination_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "636280e6b55f76bccb531c19eb71c191",
@@ -22851,9 +22699,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Olivier_Boscagli_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/psv_eindhoven.png"
   },
   {
     "cluster_id": "55c03b7cfcafe651da037e886a13fa88",
@@ -22889,9 +22736,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/como.png",
-    "destination_logo_url": "./assets/logos/como.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/como.png",
+    "destination_logo_url": "assets/logos/como.png"
   },
   {
     "cluster_id": "0153c3cc8ad8dcff7090419cbe30d63f",
@@ -22927,9 +22773,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/everton.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "44217019fcca9f9c5d825e03eea1c63b",
@@ -22965,9 +22809,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fulham.png",
-    "destination_logo_url": "./assets/logos/fulham.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Harry_Wilson_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/fulham.png",
+    "destination_logo_url": "assets/logos/fulham.png"
   },
   {
     "cluster_id": "81c8565969376abace6fddcee81a2a62",
@@ -23003,9 +22847,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Erling_Haaland_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png"
   },
   {
     "cluster_id": "e4e0fe0e4f02f0dadc768ffa8b602479",
@@ -23041,9 +22884,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Kerim_Alajbegovic_Left_Winger.jpg"
   },
   {
     "cluster_id": "41f9dce758ac878635ffd5e82fe7eec9",
@@ -23079,9 +22920,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dani_Olmo_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "7272ddfaeae0c1fa6f1985cf3a12733a",
@@ -23117,9 +22957,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dusan_Vlahovic_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "78842815248300fa6ae79f7776a5080a",
@@ -23155,9 +22995,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/cruzeiro.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/cruzeiro.png"
   },
   {
     "cluster_id": "b49993deb563a72b7ad24415d2c546e1",
@@ -23193,9 +23031,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Declan_Rice_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png"
   },
   {
     "cluster_id": "57e1569b60af59acfdb5632787ef8246",
@@ -23231,9 +23068,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/everton.png",
-    "destination_logo_url": "./assets/logos/everton.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/everton.png",
+    "destination_logo_url": "assets/logos/everton.png"
   },
   {
     "cluster_id": "18dcb0929987319bcb41e933e23c4a4f",
@@ -23269,9 +23105,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Natan_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/real_betis.png"
   },
   {
     "cluster_id": "2d780aa39437eb9f7b00609effe15649",
@@ -23307,9 +23142,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/arsenal.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ethan_Nwaneri_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/arsenal.png",
+    "destination_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "813ffd06e403697bbf22bb3a9890adbd",
@@ -23345,9 +23180,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dayot_Upamecano_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png"
   },
   {
     "cluster_id": "3ab6a98833469860b515c2cb1bca38fd",
@@ -23383,9 +23217,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Francisco_Conceicao_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "ae845fc0c99186b375ddb2a70e405842",
@@ -23437,9 +23271,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Eric_Dier_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png",
+    "destination_logo_url": "assets/logos/as_monaco.png"
   },
   {
     "cluster_id": "2cc9c0e5ebbe576615971050949a8736",
@@ -23475,9 +23309,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Dejan_Kulusevski_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/tottenham_hotspur.png",
+    "destination_logo_url": "assets/logos/tottenham_hotspur.png"
   },
   {
     "cluster_id": "5449dec1e0daaebe0d8c2dd7adfd4733",
@@ -23513,9 +23347,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Xavi_Simons_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/rb_leipzig.png",
+    "destination_logo_url": "assets/logos/rb_leipzig.png"
   },
   {
     "cluster_id": "84e922f956b02efb0b6f6b55702c32d8",
@@ -23551,9 +23385,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jacob_Wright_Defensive_Midfield.jpg",
+    "origin_logo_url": "assets/logos/manchester_city.png",
+    "destination_logo_url": "assets/logos/man_city.png"
   },
   {
     "cluster_id": "3bddb43380aebb16db75c3e32a13aa67",
@@ -23621,9 +23455,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Arda_Guler_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/real_madrid.png",
+    "destination_logo_url": "assets/logos/real_madrid.png"
   },
   {
     "cluster_id": "a53bd0415947807bcb95ceec535820ee",
@@ -23659,9 +23493,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fluminense.png",
-    "destination_logo_url": null,
-    "player_image_url": "./assets/player_images/fabio.jpg"
+    "player_image_url": "assets/player_images/Fabio.jpg",
+    "origin_logo_url": "assets/logos/fluminense.png"
   },
   {
     "cluster_id": "6b52090a8c99fcdb466fdbd98261d3ff",
@@ -23697,9 +23530,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/liverpool.png",
-    "destination_logo_url": "./assets/logos/chelsea.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ibrahima_Konate_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/liverpool.png",
+    "destination_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "2bdf9aee35fef3ecc4ef54d22a8736d9",
@@ -23735,9 +23568,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Tomas_Palacios_Centre-Back.jpg",
+    "destination_logo_url": "assets/logos/eintracht_frankfurt.png"
   },
   {
     "cluster_id": "4ba8b9d70ba364d153a3d526ecc0aebd",
@@ -23789,9 +23621,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Ousmane_Dembele_Right_Winger.jpg",
+    "origin_logo_url": "assets/logos/paris_saint-germain.png"
   },
   {
     "cluster_id": "63b1c402454cc0fdf7d53585e867b5d5",
@@ -23827,9 +23658,7 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/inter.png",
-    "player_image_url": null
+    "destination_logo_url": "assets/logos/inter.png"
   },
   {
     "cluster_id": "69cab7cb03a9fd59bf4e8033e8d8f25a",
@@ -23865,9 +23694,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Eric_Garcia_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "58953cc81c8b4c9662dd7e9871febec0",
@@ -23903,9 +23732,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/barcelona.png",
-    "destination_logo_url": "./assets/logos/barcelona.png",
-    "player_image_url": null
+    "origin_logo_url": "assets/logos/barcelona.png",
+    "destination_logo_url": "assets/logos/barcelona.png"
   },
   {
     "cluster_id": "33fbbe0f383704b73a1532e75b67af69",
@@ -23941,9 +23769,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Lloyd_Kelly_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/newcastle_united.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "103c956e2fe05aceb2faad7774a187a2",
@@ -23979,9 +23807,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Harry_Amass_Left-Back.jpg",
+    "origin_logo_url": "assets/logos/manchester_united.png",
+    "destination_logo_url": "assets/logos/manchester_united.png"
   },
   {
     "cluster_id": "3eea8b4edab056423fabb91d0db4441a",
@@ -24017,9 +23845,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Rodrigo_Mora_Attacking_Midfield.jpg",
+    "origin_logo_url": "assets/logos/fc_porto.png",
+    "destination_logo_url": "assets/logos/fc_porto.png"
   },
   {
     "cluster_id": "0a8911b92dd78363e8243e52bfe8d210",
@@ -24055,9 +23883,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/chelsea.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Christopher_Nkunku_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/chelsea.png"
   },
   {
     "cluster_id": "e683ca42c21a29af4ced2c2b7a6945c0",
@@ -24093,9 +23920,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": null,
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Harry_Kane_Centre-Forward.jpg",
+    "origin_logo_url": "assets/logos/bayern_munich.png"
   },
   {
     "cluster_id": "edb2f5151630cb1df53b589c3c8fc99c",
@@ -24131,9 +23957,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/fiorentina.png",
-    "destination_logo_url": "./assets/logos/fiorentina.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Pietro_Comuzzo_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/fiorentina.png",
+    "destination_logo_url": "assets/logos/fiorentina.png"
   },
   {
     "cluster_id": "f0623195668dc44c4060d9993c199f2d",
@@ -24169,9 +23995,9 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Weston_McKennie_Central_Midfield.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   },
   {
     "cluster_id": "69ff2b57386b87fd08b53ed8ad6a0040",
@@ -24207,9 +24033,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/southampton.png",
-    "destination_logo_url": null,
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Jan_Bednarek_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/southampton.png"
   },
   {
     "cluster_id": "a62e4719da7779dea8bbe2fc82a9341e",
@@ -24245,8 +24070,8 @@
         "move_type": null
       }
     ],
-    "origin_logo_url": "./assets/logos/juventus.png",
-    "destination_logo_url": "./assets/logos/juventus.png",
-    "player_image_url": null
+    "player_image_url": "assets/player_images/Federico_Gatti_Centre-Back.jpg",
+    "origin_logo_url": "assets/logos/juventus.png",
+    "destination_logo_url": "assets/logos/juventus.png"
   }
 ]
