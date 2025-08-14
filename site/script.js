@@ -41,7 +41,6 @@
 
   const fmtPct = n => {
     const v = clamp(safeNum(n) * 100, 0, 100);
-    // 1 decimal for mid-range; integers for 0/100
     if (v === 0 || v === 100) return `${Math.round(v)}%`;
     return `${(Math.round(v * 10) / 10).toFixed(1)}%`;
   };
@@ -54,7 +53,6 @@
   };
 
   const tweetDate = (t) => {
-    // Prefer created_at ISO; else derive from id if needed
     if (t && t.created_at) {
       const d = new Date(t.created_at);
       if (!isNaN(d)) return d;
@@ -65,7 +63,6 @@
   const normalizeAsset = (p) => {
     if (!p || typeof p !== "string") return null;
     let v = p.replace(/\\/g, "/").replace(/^\.\/+/,"");
-    // If someone accidentally included "site/" keep from assets/ onward
     const idx = v.indexOf("assets/");
     if (idx >= 0) v = v.slice(idx);
     return v;
@@ -73,18 +70,7 @@
 
   const statusKey = (s) => (String(s || "").toLowerCase().replace(/\s+/g, "-"));
 
-  const statusOrder = {
-    "confirmed": 6,
-    "imminent":  5,
-    "advanced":  4,
-    "linked":    3,
-    "speculative": 2,
-    "ghosted":   1,
-    "no-shot":   0,
-  };
-
   const displayCertainty = (cluster) => {
-    // Use certainty_score as-is (no decay)
     const v = Number(cluster?.certainty_score);
     return Number.isFinite(v) ? v : 0;
   };
@@ -98,7 +84,6 @@
   const topTweet = (c) => {
     const tweets = c?.tweets || [];
     if (!tweets.length) return null;
-    // score by engagement
     const score = (t) => (
       safeNum(t.likes) * 3 +
       safeNum(t.retweets) * 5 +
@@ -119,7 +104,6 @@
   // Data
   // ---------------------------
   function processRumors(raw) {
-    // Normalize assets & fill last_seen from newest tweet if missing
     let tweetCount = 0;
     const out = raw.map((r) => {
       const c = { ...r };
@@ -157,15 +141,12 @@
       data = data.filter(c => (String(c.status_bin || "").toLowerCase() === status.toLowerCase()));
     }
 
-    // Sorting
     const keyers = {
       hotness: (c) => Number(use7d ? c.hotness_7d : c.hotness_score) || 0,
       certainty: (c) => displayCertainty(c) || 0,
       date: (c) => (c._lastSeen instanceof Date && !isNaN(c._lastSeen)) ? +c._lastSeen : 0,
       name: (c) => (c.player_name_display || c.normalized_player_name || "").toLowerCase(),
     };
-
-    const numericSort = ["hotness", "certainty", "date"].includes(sort);
 
     if (sort === "name") {
       data = [...data].sort((a,b) => keyers.name(a).localeCompare(keyers.name(b)));
@@ -267,7 +248,6 @@
       rerenderList();
     });
 
-    // initial
     resort();
     renderChunk();
   }
@@ -285,30 +265,25 @@
       const node = tpl.content.cloneNode(true);
       const $ = (sel) => node.querySelector(sel);
 
-      // Basics
       $(".player-img").src = c.player_image_url || FALLBACK_PLAYER_IMG;
       $(".player-name").textContent = c.player_name_display || c.normalized_player_name || "Unknown";
 
-      // Status
       const status = String(c.status_bin || "—");
       const pill = node.querySelector(".status-pill");
       pill.textContent = status;
       pill.className = `status-pill status-${statusKey(status)}`;
 
-      // Clubs
       $(".origin-logo").src = c.origin_logo_url || FALLBACK_CLUB_LOGO;
       $(".destination-logo").src = c.destination_logo_url || FALLBACK_CLUB_LOGO;
       $(".origin-name").textContent = c.origin_club || c.normalized_origin_club || "—";
       $(".destination-name").textContent = c.destination_club || c.normalized_destination_club || "—";
 
-      // Staying (origin == destination)
       const isSame = (
         (c.normalized_origin_club && c.normalized_destination_club &&
          c.normalized_origin_club === c.normalized_destination_club) ||
         c.is_renewal_or_stay
       );
       if (isSame) {
-        // replace arrow context by adding "(staying)" suffix
         const dest = c.destination_club || c.normalized_destination_club || "—";
         const destNameEl = node.querySelector(".destination .club-name");
         destNameEl.textContent = `${dest} (staying)`;
@@ -316,7 +291,6 @@
         arrow && arrow.remove();
       }
 
-      // Metrics
       const use7d = elUse7d.checked;
       $(".hotness-value").textContent  = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
       $(".certainty-value").textContent= fmtPct(displayCertainty(c));
@@ -324,7 +298,6 @@
       const newestDate = newest ? tweetDate(newest) : (c._lastSeen instanceof Date ? c._lastSeen : null);
       $(".last-seen").textContent = fmtDateShort(newestDate);
 
-      // Tweets section
       renderTweetsSection(node, c);
 
       frag.appendChild(node);
@@ -376,7 +349,6 @@
       const newestDate = newest ? tweetDate(newest) : (c._lastSeen instanceof Date ? c._lastSeen : null);
       node.querySelector(".last-seen").textContent = fmtDateShort(newestDate);
 
-      // Snippet from top tweet
       const tt = topTweet(c);
       node.querySelector(".row-sub .row-snippet").textContent = tt ? (tt.tweet_text || "").slice(0,170) + (tt.tweet_text && tt.tweet_text.length>170 ? "…" : "") : "—";
 
@@ -399,7 +371,6 @@
   // ---------------------------
   async function init(){
     try{
-      // Build tag
       const tag = (window.APP_BUILD || ("dev-" + new Date().toISOString().slice(0,19)));
       if (elBuildTag) elBuildTag.textContent = tag;
 
@@ -407,18 +378,14 @@
       const res = await fetch(url, { cache: "no-store" });
       const raw = await res.json();
 
-      // Process + render
       const { rows, tweetCount } = processRumors(raw);
       window._rumors = rows;
 
-      // Summary
       elClusterCount.textContent = rows.length.toLocaleString();
       elTweetCount.textContent   = tweetCount.toLocaleString();
 
-      // First render
       render(applyFilters(rows));
 
-      // Controls
       elSearch.addEventListener("input", () => render(applyFilters(window._rumors)));
       elStatus.addEventListener("change", () => render(applyFilters(window._rumors)));
       elUse7d.addEventListener("change", () => render(applyFilters(window._rumors)));
