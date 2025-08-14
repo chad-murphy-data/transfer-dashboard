@@ -1,5 +1,6 @@
 // site/script.js
 // Transfer Credibility Dashboard (Cards + List view)
+// - Fixes: (1) client-side hotness if JSON is degenerate, (2) hide NA-name clusters
 // - Fetches final_rumors_clean.json
 // - Filters: search, status, 7-day hotness
 // - Sort: hotness | certainty | date | name
@@ -20,7 +21,6 @@
   const elClusterCount = document.getElementById("clusterCount");
   const elTweetCount   = document.getElementById("tweetCount");
 
-  // Fallbacks (HTML also has onerror fallbacks on <img>)
   const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
   const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
@@ -31,25 +31,27 @@
     const n = Number(x);
     return Number.isFinite(n) ? n : d;
   };
-
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+  // Engagement scoring (shared by tweet ranking & hotness calc)
+  const tweetEngagement = (t) =>
+    safeNum(t.likes)*3 + safeNum(t.retweets)*5 + safeNum(t.quotes)*2 +
+    safeNum(t.replies)*2 + safeNum(t.bookmarks) + safeNum(t.views)*0.01;
 
   const fmtHot = n => {
     const v = clamp(Math.round(safeNum(n)), 0, 100);
     return String(v);
   };
-
   const fmtPct = n => {
     const v = clamp(safeNum(n) * 100, 0, 100);
     if (v === 0 || v === 100) return `${Math.round(v)}%`;
     return `${(Math.round(v * 10) / 10).toFixed(1)}%`;
   };
-
   const fmtDateShort = d => {
     if (!(d instanceof Date) || isNaN(d)) return "—";
     const date = d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
     const time = d.toLocaleTimeString(undefined, { hour12: false, hour: "2-digit", minute: "2-digit" });
-    return `${date} ${time}`; // e.g., "Jun 10, 2025 16:38"
+    return `${date} ${time}`;
   };
 
   const tweetDate = (t) => {
@@ -69,12 +71,10 @@
   };
 
   const statusKey = (s) => (String(s || "").toLowerCase().replace(/\s+/g, "-"));
-
   const displayCertainty = (cluster) => {
     const v = Number(cluster?.certainty_score);
     return Number.isFinite(v) ? v : 0;
   };
-
   const searchHaystack = (c) => [
     c.player_name_display, c.normalized_player_name,
     c.origin_club, c.normalized_origin_club, c.display_origin_club,
@@ -84,30 +84,61 @@
   const topTweet = (c) => {
     const tweets = c?.tweets || [];
     if (!tweets.length) return null;
-    const score = (t) => (
-      safeNum(t.likes) * 3 +
-      safeNum(t.retweets) * 5 +
-      safeNum(t.quotes) * 2 +
-      safeNum(t.replies) * 2 +
-      safeNum(t.bookmarks) * 1 +
-      safeNum(t.views) * 0.01
-    );
     let best = tweets[0], bestScore = -1;
     for (const t of tweets) {
-      const s = score(t);
+      const s = tweetEngagement(t);
       if (s > bestScore) { bestScore = s; best = t; }
     }
     return best;
   };
 
   // ---------------------------
+  // Hotness backfill (if JSON is degenerate)
+  // ---------------------------
+  function needsHotnessRecalc(rows) {
+    const vals = rows.map(r => Number(r.hotness_score)).filter(v => Number.isFinite(v));
+    if (vals.length === 0) return true;
+    const uniq = new Set(vals.map(v => Math.round(v)));
+    return uniq.size <= 1; // e.g., all 100
+  }
+
+  function computeClusterScore(c) {
+    const arr = (c.tweets || []).slice();
+    if (!arr.length) return 0;
+    // use top-3 tweets by engagement to avoid thread spam dominating
+    arr.sort((a,b) => tweetEngagement(b) - tweetEngagement(a));
+    const s = arr.slice(0, 3).reduce((acc, t) => acc + tweetEngagement(t), 0);
+    // log dampening to avoid giant outliers
+    return Math.log1p(s);
+  }
+
+  function recalcHotness(rows) {
+    const scores = rows.map(computeClusterScore);
+    const mean = scores.reduce((a,b)=>a+b,0) / (scores.length || 1);
+    const sd = Math.sqrt(scores.reduce((a,b)=>a + Math.pow(b-mean,2),0) / (Math.max(1, scores.length-1)));
+    for (let i=0;i<rows.length;i++){
+      const z = sd > 0 ? (scores[i] - mean) / sd : -1.0;
+      // Map: mean (z=0) → 25; +3σ → 100; left-censored at 0
+      const hot = clamp(Math.round(25 + 25 * z), 0, 100);
+      rows[i].hotness_score = hot;
+      rows[i]._hotnessRecalc = true;
+    }
+  }
+
+  // ---------------------------
   // Data
   // ---------------------------
   function processRumors(raw) {
-    let tweetCount = 0;
-    const out = raw.map((r) => {
-      const c = { ...r };
+    // 1) Normalize assets, compute last seen, drop NA-name junk
+    const isBadName = (s) => {
+      if (!s) return true;
+      const v = String(s).trim().toLowerCase();
+      return v === "" || v === "na" || v === "n/a" || v === "null" || v === "none";
+    };
 
+    let tweetCount = 0;
+    let rows = raw.map((r) => {
+      const c = { ...r };
       c.player_image_url      = normalizeAsset(c.player_image_url)      || FALLBACK_PLAYER_IMG;
       c.origin_logo_url       = normalizeAsset(c.origin_logo_url)       || FALLBACK_CLUB_LOGO;
       c.destination_logo_url  = normalizeAsset(c.destination_logo_url)  || FALLBACK_CLUB_LOGO;
@@ -120,7 +151,15 @@
       return c;
     });
 
-    return { rows: out, tweetCount };
+    // Drop clusters with no real player name (fixes the “NA / 312 tweets” case)
+    rows = rows.filter(c => !(isBadName(c.player_name_display) && isBadName(c.normalized_player_name)));
+
+    // 2) Recalculate hotness if the JSON is degenerate (e.g., all 100)
+    if (needsHotnessRecalc(rows)) {
+      recalcHotness(rows);
+    }
+
+    return { rows, tweetCount };
   }
 
   // ---------------------------
@@ -177,8 +216,7 @@
     let mode = "engagement"; // or "newest"
     sortSel.value = mode;
 
-    const engagementScore = (t) =>
-      safeNum(t.likes)*3 + safeNum(t.retweets)*5 + safeNum(t.quotes)*2 + safeNum(t.replies)*2 + safeNum(t.bookmarks) + safeNum(t.views)*0.01;
+    const engagementScore = tweetEngagement;
 
     const resort = () => {
       if (mode === "engagement") {
@@ -350,7 +388,8 @@
       node.querySelector(".last-seen").textContent = fmtDateShort(newestDate);
 
       const tt = topTweet(c);
-      node.querySelector(".row-sub .row-snippet").textContent = tt ? (tt.tweet_text || "").slice(0,170) + (tt.tweet_text && tt.tweet_text.length>170 ? "…" : "") : "—";
+      node.querySelector(".row-sub .row-snippet").textContent =
+        tt ? (tt.tweet_text || "").slice(0,170) + (tt.tweet_text && tt.tweet_text.length>170 ? "…" : "") : "—";
 
       renderTweetsSection(node, c);
 
@@ -397,6 +436,5 @@
     }
   }
 
-  // Go
   init();
 })();
