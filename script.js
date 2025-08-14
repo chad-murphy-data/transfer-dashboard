@@ -1,8 +1,10 @@
 /* Transfer Credibility — client app
    - Fetches final_rumors_clean.json (cache-busted)
-   - Cleans & filters data (mega-bin guard, path fixes)
+   - Normalizes asset paths & data types
+   - Handles same-club renewals/stays
    - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Renders responsive cards with top tweet + engagement
+   - Floors certainty by status bin for display
+   - Renders cards + expandable tweet list (show all)
 */
 
 /* =========================
@@ -10,10 +12,10 @@
 ========================= */
 const JSON_PATH = "final_rumors_clean.json";
 const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
-const MEGACLUSTER_TWEET_CAP = 80; // safety valve to drop junk clusters
+const MEGACLUSTER_TWEET_CAP = 80; // drop absurd clusters
 const TWITTER_EPOCH_MS = 1288834974657; // 2010-11-04
 
-// Fallback assets (add these small PNGs or update paths)
+// Fallback assets (ensure these exist under /site/assets/…)
 const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
 const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
@@ -34,8 +36,17 @@ const elBuildTag     = document.getElementById("buildTag");
    Utils
 ========================= */
 const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
-const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
-const pad2     = n => String(n).padStart(2, "0");
+
+// Normalize any incoming path → public URL under /assets/…
+const normalizeAsset = (p) => {
+  if (!p) return null;
+  let s = String(p).replaceAll("\\", "/"); // backslashes → slashes
+  s = s.replace(/^\.\/+/, "");             // strip leading ./ 
+  s = s.replace(/^site\//, "");            // strip accidental site/ prefix
+  const i = s.indexOf("assets/");          // keep from first "assets/" onward
+  if (i > 0) s = s.slice(i);
+  return s.startsWith("assets/") ? s : null;
+};
 
 const canonicalizeClub = s => {
   if (!s) return null;
@@ -109,7 +120,21 @@ const fmtDate = d => {
   return d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 };
 
-// Pick best tweet per cluster (by engagement, tiebreak: newest)
+// Display certainty: floor by status bin (so Confirmed never shows 0%)
+const displayCertainty = c => {
+  let p = Number.isFinite(c?.decayed_certainty) ? c.decayed_certainty
+        : Number.isFinite(c?.certainty_score)   ? c.certainty_score
+        : 0;
+  const bin = String(c?.status_bin || "");
+  if (bin === "Confirmed")      p = Math.max(p, 0.99);
+  else if (bin === "Imminent")  p = Math.max(p, 0.90);
+  else if (bin === "Advanced")  p = Math.max(p, 0.70);
+  else if (bin === "Linked")    p = Math.max(p, 0.40);
+  else if (bin === "Speculative") p = Math.max(p, 0.15);
+  return Math.min(1, Math.max(0, p));
+};
+
+// Pick best tweet per cluster (by engagement, tiebreak newest)
 const topTweet = c => {
   const arr = Array.isArray(c.tweets) ? c.tweets : [];
   if (!arr.length) return null;
@@ -122,6 +147,36 @@ const topTweet = c => {
     }
   }
   return best;
+};
+
+// Small helpers for tweet list UI
+const emj = { likes:"♥", retweets:"⇄", replies:"💬", quotes:"❝", bookmarks:"🔖", views:"👁" };
+const fmtK = n => {
+  n = Number(n)||0;
+  if (n >= 1_000_000) return (n/1_000_000).toFixed(n%1_000_000?1:0) + "M";
+  if (n >= 1_000)     return (n/1_000).toFixed(n%1_000?1:0) + "k";
+  return n.toString();
+};
+const fmtMeta = t => [
+  `${emj.likes} ${fmtK(t.likes)}`,
+  `${emj.retweets} ${fmtK(t.retweets)}`,
+  `${emj.replies} ${fmtK(t.replies)}`,
+  `${emj.quotes} ${fmtK(t.quotes)}`,
+  `${emj.bookmarks} ${fmtK(t.bookmarks)}`,
+  `${emj.views} ${fmtK(t.views)}`
+].join("  •  ");
+const sortTweets = (tweets, mode="engagement") => {
+  const arr = tweets.slice();
+  if (mode === "newest") {
+    arr.sort((a,b) => (tweetDate(b)?.getTime()||0) - (tweetDate(a)?.getTime()||0));
+  } else {
+    arr.sort((a,b) => {
+      const sb = tweetEngagement(b) - tweetEngagement(a);
+      if (sb !== 0) return sb;
+      return (tweetDate(b)?.getTime()||0) - (tweetDate(a)?.getTime()||0);
+    });
+  }
+  return arr;
 };
 
 /* =========================
@@ -145,17 +200,40 @@ function processRumors(rows) {
       };
     }) : [];
 
+    const normOrigin = canonicalizeClub(r.normalized_origin_club || r.origin_club);
+    const normDest   = canonicalizeClub(r.normalized_destination_club || r.destination_club);
+
     return {
       ...r,
       certainty_score: certainty,
       decayed_certainty: certainty, // ignore decay for now
-      origin_logo_url: normPath(r.origin_logo_url) || null,
-      destination_logo_url: normPath(r.destination_logo_url) || null,
-      player_image_url: normPath(r.player_image_url) || null,
-      normalized_destination_club: canonicalizeClub(r.normalized_destination_club || r.destination_club),
-      normalized_origin_club: canonicalizeClub(r.normalized_origin_club || r.origin_club),
+
+      origin_logo_url: normalizeAsset(r.origin_logo_url),
+      destination_logo_url: normalizeAsset(r.destination_logo_url),
+      player_image_url: normalizeAsset(r.player_image_url),
+
+      normalized_destination_club: normDest,
+      normalized_origin_club: normOrigin,
       tweets
     };
+  });
+
+  // Treat same-club origin/destination as stay/renewal
+  const sameClub = (c) =>
+    c.normalized_origin_club &&
+    c.normalized_destination_club &&
+    c.normalized_origin_club === c.normalized_destination_club;
+
+  fixed = fixed.map(c => {
+    if (sameClub(c)) {
+      return {
+        ...c,
+        is_renewal_or_stay: true,
+        move_type: c.move_type || "renewal",
+        status_bin: c.status_bin || "Confirmed"
+      };
+    }
+    return c;
   });
 
   // Filter out the mega-bin (empty player + empty clubs) & any absurd clusters
@@ -210,6 +288,92 @@ function processRumors(rows) {
 /* =========================
    Rendering
 ========================= */
+function renderTweetsSection(cardNode, cluster) {
+  const details = cardNode.querySelector(".tweet-details");
+  const list    = cardNode.querySelector(".tweet-list");
+  const btnMore = cardNode.querySelector(".tweet-more");
+  const btnExp  = cardNode.querySelector(".tweet-expand");
+  const selSort = cardNode.querySelector(".tweet-sort");
+  const lblChip = cardNode.querySelector(".tweet-sort-chip");
+  const lblCount= cardNode.querySelector(".tweet-count");
+  const lblSum  = cardNode.querySelector(".tweet-summary-label");
+
+  const TWEETS = Array.isArray(cluster.tweets) ? cluster.tweets : [];
+  lblCount.textContent = `(${TWEETS.length})`;
+  lblSum.textContent = "Tweets";
+
+  // local state per card
+  let mode = selSort.value || "engagement";
+  let sorted = sortTweets(TWEETS, mode);
+  let pageSize = 10;
+  let shown = Math.min(1, sorted.length);   // start with top tweet only
+  let expanded = false;
+
+  lblChip.textContent = mode === "newest" ? "Newest" : "Engagement";
+
+  const renderList = () => {
+    list.innerHTML = "";
+    const slice = sorted.slice(0, shown);
+    for (const t of slice) {
+      const item = document.createElement("div");
+      item.className = "tweet-item";
+      const left = document.createElement("div");
+      left.className = "tweet-text";
+      left.textContent = t.tweet_text || "";
+      const right = document.createElement("div");
+      right.className = "tweet-meta";
+
+      const when = document.createElement("span");
+      when.className = "tweet-date";
+      when.textContent = fmtDate(tweetDate(t));
+
+      const link = document.createElement("a");
+      link.className = "tweet-link";
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.href = t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`;
+      link.textContent = "Open";
+
+      const meta = document.createElement("span");
+      meta.textContent = fmtMeta(t);
+
+      right.append(when, link, meta);
+      item.append(left, right);
+      list.appendChild(item);
+    }
+    // controls
+    btnMore.hidden = shown >= sorted.length;
+    btnExp.textContent = expanded ? "Collapse" : "Show all";
+  };
+
+  // events
+  selSort.addEventListener("change", () => {
+    mode = selSort.value;
+    lblChip.textContent = mode === "newest" ? "Newest" : "Engagement";
+    sorted = sortTweets(TWEETS, mode);
+    renderList();
+  });
+
+  btnExp.addEventListener("click", () => {
+    expanded = !expanded;
+    if (expanded) {
+      shown = Math.max(shown, Math.min(pageSize, sorted.length));
+      details.setAttribute("open", "open");
+    } else {
+      shown = Math.min(1, sorted.length);
+    }
+    renderList();
+  });
+
+  btnMore.addEventListener("click", () => {
+    shown = Math.min(sorted.length, shown + pageSize);
+    renderList();
+  });
+
+  // Initial render (1 top tweet)
+  renderList();
+}
+
 function render(data) {
   // Summary
   elClusterCount.textContent = data.length.toLocaleString();
@@ -242,28 +406,25 @@ function render(data) {
     // Metrics
     const use7d = elUse7d.checked;
     $(".hotness-value").textContent = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
-    $(".certainty-value").textContent = fmtPct(c.decayed_certainty ?? c.certainty_score);
+    $(".certainty-value").textContent = fmtPct(displayCertainty(c));
 
     // Last seen = newest tweet date in cluster (fallback to last_seen_at)
     const newestTweet = topTweet({ tweets: c.tweets }) || (c.tweets && c.tweets[0]) || null;
     const newestDate = newestTweet ? tweetDate(newestTweet) : (c.last_seen_at ? new Date(c.last_seen_at) : null);
     $(".last-seen").textContent = fmtDate(newestDate);
 
-    // Tweet details
-    const t = topTweet(c);
-    if (t) {
-      $(".tweet-link").href = t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`;
-      $(".tweet-text").textContent = t.tweet_text || "";
-      $(".likes").textContent     = `♥ ${safeNum(t.likes).toLocaleString()}`;
-      $(".retweets").textContent  = `⇄ ${safeNum(t.retweets).toLocaleString()}`;
-      $(".replies").textContent   = `💬 ${safeNum(t.replies).toLocaleString()}`;
-      $(".quotes").textContent    = `❝ ${safeNum(t.quotes).toLocaleString()}`;
-      $(".bookmarks").textContent = `🔖 ${safeNum(t.bookmarks).toLocaleString()}`;
-      $(".views").textContent     = `👁 ${safeNum(t.views).toLocaleString()}`;
-    } else {
-      $(".tweet-text").textContent = "No tweet details available.";
-      $(".tweet-link").removeAttribute("href");
+    // Same-club (staying) presentation: hide origin and mark destination
+    const isSame = (c.normalized_origin_club && c.normalized_destination_club &&
+                    c.normalized_origin_club === c.normalized_destination_club) || c.is_renewal_or_stay;
+    if (isSame) {
+      $(".origin").style.display = "none";
+      $(".arrow").textContent = "🔒";
+      const destName = c.destination_club || c.normalized_destination_club || "—";
+      $(".destination-name").textContent = `${destName} (staying)`;
     }
+
+    // Tweets section (top + expandable list)
+    renderTweetsSection(node, c);
 
     frag.appendChild(node);
   }
@@ -300,7 +461,7 @@ function applyFilters(rows) {
   const use7d = elUse7d.checked;
   const cmp = {
     hotness: (a, b) => (use7d ? b.hotness_7d - a.hotness_7d : b.hotness_score - a.hotness_score),
-    certainty: (a, b) => (b.decayed_certainty ?? b.certainty_score ?? 0) - (a.decayed_certainty ?? a.certainty_score ?? 0),
+    certainty: (a, b) => displayCertainty(b) - displayCertainty(a),
     date: (a, b) => {
       const at = topTweet(a), bt = topTweet(b);
       const ad = at ? tweetDate(at) : (a.last_seen_at ? new Date(a.last_seen_at) : null);
@@ -318,7 +479,8 @@ function applyFilters(rows) {
    Boot
 ========================= */
 (async function init() {
-  const bust = (window.APP_BUILD || `${new Date().getFullYear()}-${pad2(new Date().getMonth()+1)}-${pad2(new Date().getDate())}-${Date.now()}`);
+  const now = new Date();
+  const bust = (window.APP_BUILD || `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}-${Date.now()}`);
   elBuildTag.textContent = String(bust);
 
   const res = await fetch(`${JSON_PATH}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
