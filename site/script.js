@@ -1,503 +1,435 @@
-/* Transfer Credibility — client app
-   - Fetches final_rumors_clean.json (cache-busted)
-   - Normalizes asset paths & data types
-   - Handles same-club renewals/stays
-   - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Floors certainty by status bin for display
-   - Renders cards + expandable tweet list (show all)
-*/
+// site/script.js
+// Transfer Credibility Dashboard (Cards + List view)
+// - Fetches final_rumors_clean.json
+// - Filters: search, status, 7-day hotness
+// - Sort: hotness | certainty | date | name
+// - Views: cards (rich) & list (dense)
+// - Expandable Tweets section per cluster
 
-/* =========================
-   Config & constants
-========================= */
-const JSON_PATH = "final_rumors_clean.json";
-const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
-const MEGACLUSTER_TWEET_CAP = 80; // drop absurd clusters
-const TWITTER_EPOCH_MS = 1288834974657; // 2010-11-04
+(() => {
+  // ---------------------------
+  // DOM
+  // ---------------------------
+  const elSearch       = document.getElementById("searchInput");
+  const elStatus       = document.getElementById("statusFilter");
+  const elUse7d        = document.getElementById("use7dHotness");
+  const elSort         = document.getElementById("sortSelect");
+  const elViewMode     = document.getElementById("viewMode");
+  const elCards        = document.getElementById("cards");
+  const elBuildTag     = document.getElementById("buildTag");
+  const elClusterCount = document.getElementById("clusterCount");
+  const elTweetCount   = document.getElementById("tweetCount");
 
-// Fallback assets (ensure these exist under /site/assets/…)
-const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
-const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
+  // Fallbacks (HTML also has onerror fallbacks on <img>)
+  const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
+  const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
-/* =========================
-   DOM handles
-========================= */
-const elCards        = document.getElementById("cards");
-const elSearch       = document.getElementById("searchInput");
-const elStatus       = document.getElementById("statusFilter");
-const elUse7d        = document.getElementById("use7dHotness");
-const elSort         = document.getElementById("sortSelect");
-const elClusterCount = document.getElementById("clusterCount");
-const elTweetCount   = document.getElementById("tweetCount");
-const elCardTpl      = document.getElementById("card-template");
-const elBuildTag     = document.getElementById("buildTag");
-
-/* =========================
-   Utils
-========================= */
-const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
-
-// Normalize any incoming path → public URL under /assets/…
-const normalizeAsset = (p) => {
-  if (!p) return null;
-  let s = String(p).replaceAll("\\", "/"); // backslashes → slashes
-  s = s.replace(/^\.\/+/, "");             // strip leading ./ 
-  s = s.replace(/^site\//, "");            // strip accidental site/ prefix
-  const i = s.indexOf("assets/");          // keep from first "assets/" onward
-  if (i > 0) s = s.slice(i);
-  return s.startsWith("assets/") ? s : null;
-};
-
-const canonicalizeClub = s => {
-  if (!s) return null;
-  const alias = {
-    barca: "barcelona",
-    psg: "paris saint-germain",
-    "man city": "manchester city",
-    city: "manchester city",
-    "man utd": "manchester united",
-    utd: "manchester united",
-    atletico: "atletico madrid",
-    rm: "real madrid",
-  };
-  const key = String(s).trim().toLowerCase();
-  return alias[key] ?? key;
-};
-
-const snowflakeToDate = id => new Date(Number(BigInt(id) >> 22n) + TWITTER_EPOCH_MS);
-
-const tweetDate = t => {
-  if (t.created_at) {
-    const d = new Date(t.created_at);
-    if (!isNaN(d)) return d;
-  }
-  if (t.tweet_id) {
-    const d = snowflakeToDate(t.tweet_id);
-    if (!isNaN(d)) return d;
-  }
-  return null;
-};
-
-const tweetEngagement = t => {
-  const likes      = safeNum(t.likes ?? t.like_count ?? t.favorite_count);
-  const rts        = safeNum(t.retweets ?? t.retweet_count);
-  const replies    = safeNum(t.replies ?? t.reply_count);
-  const quotes     = safeNum(t.quotes ?? t.quote_count);
-  const bookmarks  = safeNum(t.bookmarks ?? t.bookmark_count);
-  const views      = safeNum(t.views ?? t.view_count ?? t.impressions ?? t.impression_count);
-  // log1p dampening to tame heavy tails
-  return (
-    W.likes     * Math.log1p(likes) +
-    W.retweets  * Math.log1p(rts) +
-    W.replies   * Math.log1p(replies) +
-    W.quotes    * Math.log1p(quotes) +
-    W.bookmarks * Math.log1p(bookmarks) +
-    W.views     * Math.log1p(views)
-  );
-};
-
-const clusterRawScore = c => {
-  const tweets = Array.isArray(c.tweets) ? c.tweets : [];
-  if (!tweets.length) return 0;
-  return Math.max(...tweets.map(tweetEngagement));
-};
-
-const mean = arr => arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
-const std  = (arr, m) => {
-  if (arr.length < 2) return 0;
-  const v = arr.reduce((s, x) => s + (x - m) ** 2, 0) / (arr.length - 1);
-  return Math.sqrt(v);
-};
-
-// Left-censored normal-esque mapping (mean≈25, SD≈25, cap 100)
-const zToHotness = z => Math.max(0, Math.min(100, 25 + 25 * z));
-
-// Formatters
-const fmtPct  = x => (x == null || isNaN(x) ? "—" : `${Math.round(Number(x) * 100)}%`);
-const fmtHot  = x => (x == null || isNaN(x) ? "—" : Math.round(x));
-const fmtDate = d => {
-  if (!(d instanceof Date) || isNaN(d)) return "—";
-  return d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
-};
-
-// Display certainty: floor by status bin (so Confirmed never shows 0%)
-const displayCertainty = c => {
-  let p = Number.isFinite(c?.decayed_certainty) ? c.decayed_certainty
-        : Number.isFinite(c?.certainty_score)   ? c.certainty_score
-        : 0;
-  const bin = String(c?.status_bin || "");
-  if (bin === "Confirmed")      p = Math.max(p, 0.99);
-  else if (bin === "Imminent")  p = Math.max(p, 0.90);
-  else if (bin === "Advanced")  p = Math.max(p, 0.70);
-  else if (bin === "Linked")    p = Math.max(p, 0.40);
-  else if (bin === "Speculative") p = Math.max(p, 0.15);
-  return Math.min(1, Math.max(0, p));
-};
-
-// Pick best tweet per cluster (by engagement, tiebreak newest)
-const topTweet = c => {
-  const arr = Array.isArray(c.tweets) ? c.tweets : [];
-  if (!arr.length) return null;
-  let best = null, bestScore = -Infinity;
-  for (const t of arr) {
-    const score = tweetEngagement(t);
-    const d = tweetDate(t);
-    if (score > bestScore || (score === bestScore && d && best && d > tweetDate(best))) {
-      best = t; bestScore = score;
-    }
-  }
-  return best;
-};
-
-// Small helpers for tweet list UI
-const emj = { likes:"♥", retweets:"⇄", replies:"💬", quotes:"❝", bookmarks:"🔖", views:"👁" };
-const fmtK = n => {
-  n = Number(n)||0;
-  if (n >= 1_000_000) return (n/1_000_000).toFixed(n%1_000_000?1:0) + "M";
-  if (n >= 1_000)     return (n/1_000).toFixed(n%1_000?1:0) + "k";
-  return n.toString();
-};
-const fmtMeta = t => [
-  `${emj.likes} ${fmtK(t.likes)}`,
-  `${emj.retweets} ${fmtK(t.retweets)}`,
-  `${emj.replies} ${fmtK(t.replies)}`,
-  `${emj.quotes} ${fmtK(t.quotes)}`,
-  `${emj.bookmarks} ${fmtK(t.bookmarks)}`,
-  `${emj.views} ${fmtK(t.views)}`
-].join("  •  ");
-const sortTweets = (tweets, mode="engagement") => {
-  const arr = tweets.slice();
-  if (mode === "newest") {
-    arr.sort((a,b) => (tweetDate(b)?.getTime()||0) - (tweetDate(a)?.getTime()||0));
-  } else {
-    arr.sort((a,b) => {
-      const sb = tweetEngagement(b) - tweetEngagement(a);
-      if (sb !== 0) return sb;
-      return (tweetDate(b)?.getTime()||0) - (tweetDate(a)?.getTime()||0);
-    });
-  }
-  return arr;
-};
-
-/* =========================
-   Data processing
-========================= */
-function processRumors(rows) {
-  // Normalize core fields, coerce, and fix per-tweet fields
-  let fixed = rows.map(r => {
-    const certainty = r.certainty_score === "" ? null : Number(r.certainty_score);
-    const tweets = Array.isArray(r.tweets) ? r.tweets.map(t => {
-      const d = tweetDate(t);
-      return {
-        ...t,
-        created_at: d ? d.toISOString() : null,
-        likes:      safeNum(t.likes),
-        retweets:   safeNum(t.retweets),
-        replies:    safeNum(t.replies),
-        quotes:     safeNum(t.quotes),
-        bookmarks:  safeNum(t.bookmarks),
-        views:      safeNum(t.views),
-      };
-    }) : [];
-
-    const normOrigin = canonicalizeClub(r.normalized_origin_club || r.origin_club);
-    const normDest   = canonicalizeClub(r.normalized_destination_club || r.destination_club);
-
-    return {
-      ...r,
-      certainty_score: certainty,
-      decayed_certainty: certainty, // ignore decay for now
-
-      origin_logo_url: normalizeAsset(r.origin_logo_url),
-      destination_logo_url: normalizeAsset(r.destination_logo_url),
-      player_image_url: normalizeAsset(r.player_image_url),
-
-      normalized_destination_club: normDest,
-      normalized_origin_club: normOrigin,
-      tweets
-    };
-  });
-
-  // Treat same-club origin/destination as stay/renewal
-  const sameClub = (c) =>
-    c.normalized_origin_club &&
-    c.normalized_destination_club &&
-    c.normalized_origin_club === c.normalized_destination_club;
-
-  fixed = fixed.map(c => {
-    if (sameClub(c)) {
-      return {
-        ...c,
-        is_renewal_or_stay: true,
-        move_type: c.move_type || "renewal",
-        status_bin: c.status_bin || "Confirmed"
-      };
-    }
-    return c;
-  });
-
-  // Filter out the mega-bin (empty player + empty clubs) & any absurd clusters
-  fixed = fixed.filter(c => {
-    const noPlayer = !(c.normalized_player_name && String(c.normalized_player_name).trim());
-    const noClubs  = !(c.origin_club && String(c.origin_club).trim()) &&
-                     !(c.destination_club && String(c.destination_club).trim());
-    const tooMany  = (Array.isArray(c.tweets) && c.tweets.length > MEGACLUSTER_TWEET_CAP);
-    return !( (noPlayer && noClubs) || tooMany );
-  });
-
-  // Recompute overall hotness
-  const raw = fixed.map(clusterRawScore);
-  const m = mean(raw);
-  const s = std(raw, m) || 1;
-  fixed = fixed.map((r, i) => ({ ...r, hotness_score: zToHotness((raw[i] - m) / s) }));
-
-  // Compute 7-day hotness (fallback to overall if sparse)
-  const now = new Date();
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
-  const raw7 = fixed.map(r => {
-    const recent = r.tweets.filter(t => {
-      const d = tweetDate(t);
-      return d && d >= sevenDaysAgo;
-    });
-    if (!recent.length) return null;
-    return Math.max(...recent.map(tweetEngagement));
-  });
-  const obs7 = raw7.filter(x => x != null);
-  if (obs7.length >= 5) {
-    const m7 = mean(obs7);
-    const s7 = std(obs7, m7) || 1;
-    fixed = fixed.map((r, i) => ({
-      ...r,
-      hotness_7d: raw7[i] == null ? 0 : zToHotness((raw7[i] - m7) / s7),
-    }));
-  } else {
-    fixed = fixed.map(r => ({ ...r, hotness_7d: r.hotness_score }));
-  }
-
-  // Image fallbacks
-  fixed = fixed.map(r => ({
-    ...r,
-    origin_logo_url: r.origin_logo_url || FALLBACK_CLUB_LOGO,
-    destination_logo_url: r.destination_logo_url || FALLBACK_CLUB_LOGO,
-    player_image_url: r.player_image_url || FALLBACK_PLAYER_IMG,
-  }));
-
-  return fixed;
-}
-
-/* =========================
-   Rendering
-========================= */
-function renderTweetsSection(cardNode, cluster) {
-  const details = cardNode.querySelector(".tweet-details");
-  const list    = cardNode.querySelector(".tweet-list");
-  const btnMore = cardNode.querySelector(".tweet-more");
-  const btnExp  = cardNode.querySelector(".tweet-expand");
-  const selSort = cardNode.querySelector(".tweet-sort");
-  const lblChip = cardNode.querySelector(".tweet-sort-chip");
-  const lblCount= cardNode.querySelector(".tweet-count");
-  const lblSum  = cardNode.querySelector(".tweet-summary-label");
-
-  const TWEETS = Array.isArray(cluster.tweets) ? cluster.tweets : [];
-  lblCount.textContent = `(${TWEETS.length})`;
-  lblSum.textContent = "Tweets";
-
-  // local state per card
-  let mode = selSort.value || "engagement";
-  let sorted = sortTweets(TWEETS, mode);
-  let pageSize = 10;
-  let shown = Math.min(1, sorted.length);   // start with top tweet only
-  let expanded = false;
-
-  lblChip.textContent = mode === "newest" ? "Newest" : "Engagement";
-
-  const renderList = () => {
-    list.innerHTML = "";
-    const slice = sorted.slice(0, shown);
-    for (const t of slice) {
-      const item = document.createElement("div");
-      item.className = "tweet-item";
-      const left = document.createElement("div");
-      left.className = "tweet-text";
-      left.textContent = t.tweet_text || "";
-      const right = document.createElement("div");
-      right.className = "tweet-meta";
-
-      const when = document.createElement("span");
-      when.className = "tweet-date";
-      when.textContent = fmtDate(tweetDate(t));
-
-      const link = document.createElement("a");
-      link.className = "tweet-link";
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.href = t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`;
-      link.textContent = "Open";
-
-      const meta = document.createElement("span");
-      meta.textContent = fmtMeta(t);
-
-      right.append(when, link, meta);
-      item.append(left, right);
-      list.appendChild(item);
-    }
-    // controls
-    btnMore.hidden = shown >= sorted.length;
-    btnExp.textContent = expanded ? "Collapse" : "Show all";
+  // ---------------------------
+  // Utilities
+  // ---------------------------
+  const safeNum = (x, d=0) => {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : d;
   };
 
-  // events
-  selSort.addEventListener("change", () => {
-    mode = selSort.value;
-    lblChip.textContent = mode === "newest" ? "Newest" : "Engagement";
-    sorted = sortTweets(TWEETS, mode);
-    renderList();
-  });
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
-  btnExp.addEventListener("click", () => {
-    expanded = !expanded;
-    if (expanded) {
-      shown = Math.max(shown, Math.min(pageSize, sorted.length));
-      details.setAttribute("open", "open");
-    } else {
-      shown = Math.min(1, sorted.length);
+  const fmtHot = n => {
+    const v = clamp(Math.round(safeNum(n)), 0, 100);
+    return String(v);
+  };
+
+  const fmtPct = n => {
+    const v = clamp(safeNum(n) * 100, 0, 100);
+    // 1 decimal for mid-range; integers for 0/100
+    if (v === 0 || v === 100) return `${Math.round(v)}%`;
+    return `${(Math.round(v * 10) / 10).toFixed(1)}%`;
+  };
+
+  const fmtDateShort = d => {
+    if (!(d instanceof Date) || isNaN(d)) return "—";
+    const date = d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    const time = d.toLocaleTimeString(undefined, { hour12: false, hour: "2-digit", minute: "2-digit" });
+    return `${date} ${time}`; // e.g., "Jun 10, 2025 16:38"
+  };
+
+  const tweetDate = (t) => {
+    // Prefer created_at ISO; else derive from id if needed
+    if (t && t.created_at) {
+      const d = new Date(t.created_at);
+      if (!isNaN(d)) return d;
     }
-    renderList();
-  });
+    return null;
+  };
 
-  btnMore.addEventListener("click", () => {
-    shown = Math.min(sorted.length, shown + pageSize);
-    renderList();
-  });
+  const normalizeAsset = (p) => {
+    if (!p || typeof p !== "string") return null;
+    let v = p.replace(/\\/g, "/").replace(/^\.\/+/,"");
+    // If someone accidentally included "site/" keep from assets/ onward
+    const idx = v.indexOf("assets/");
+    if (idx >= 0) v = v.slice(idx);
+    return v;
+  };
 
-  // Initial render (1 top tweet)
-  renderList();
-}
+  const statusKey = (s) => (String(s || "").toLowerCase().replace(/\s+/g, "-"));
 
-function render(data) {
-  // Summary
-  elClusterCount.textContent = data.length.toLocaleString();
-  const tweetTotal = data.reduce((sum, c) => sum + (Array.isArray(c.tweets) ? c.tweets.length : 0), 0);
-  elTweetCount.textContent = tweetTotal.toLocaleString();
+  const statusOrder = {
+    "confirmed": 6,
+    "imminent":  5,
+    "advanced":  4,
+    "linked":    3,
+    "speculative": 2,
+    "ghosted":   1,
+    "no-shot":   0,
+  };
 
-  // Cards
-  elCards.innerHTML = "";
-  const frag = document.createDocumentFragment();
+  const displayCertainty = (cluster) => {
+    // Use certainty_score as-is (no decay)
+    const v = Number(cluster?.certainty_score);
+    return Number.isFinite(v) ? v : 0;
+  };
 
-  for (const c of data) {
-    const node = elCardTpl.content.cloneNode(true);
-    const $ = sel => node.querySelector(sel);
+  const searchHaystack = (c) => [
+    c.player_name_display, c.normalized_player_name,
+    c.origin_club, c.normalized_origin_club, c.display_origin_club,
+    c.destination_club, c.normalized_destination_club
+  ].filter(Boolean).join(" ").toLowerCase();
 
-    // Header
-    $(".player-img").src = c.player_image_url;
-    $(".player-name").textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
+  const topTweet = (c) => {
+    const tweets = c?.tweets || [];
+    if (!tweets.length) return null;
+    // score by engagement
+    const score = (t) => (
+      safeNum(t.likes) * 3 +
+      safeNum(t.retweets) * 5 +
+      safeNum(t.quotes) * 2 +
+      safeNum(t.replies) * 2 +
+      safeNum(t.bookmarks) * 1 +
+      safeNum(t.views) * 0.01
+    );
+    let best = tweets[0], bestScore = -1;
+    for (const t of tweets) {
+      const s = score(t);
+      if (s > bestScore) { bestScore = s; best = t; }
+    }
+    return best;
+  };
 
-    const status = c.status_bin || "—";
-    const pill = $(".status-pill");
-    pill.textContent = status;
-    pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
+  // ---------------------------
+  // Data
+  // ---------------------------
+  function processRumors(raw) {
+    // Normalize assets & fill last_seen from newest tweet if missing
+    let tweetCount = 0;
+    const out = raw.map((r) => {
+      const c = { ...r };
 
-    // Clubs
-    $(".origin-logo").src = c.origin_logo_url;
-    $(".destination-logo").src = c.destination_logo_url;
-    $(".origin-name").textContent = c.origin_club || c.normalized_origin_club || "—";
-    $(".destination-name").textContent = c.destination_club || c.normalized_destination_club || "—";
+      c.player_image_url      = normalizeAsset(c.player_image_url)      || FALLBACK_PLAYER_IMG;
+      c.origin_logo_url       = normalizeAsset(c.origin_logo_url)       || FALLBACK_CLUB_LOGO;
+      c.destination_logo_url  = normalizeAsset(c.destination_logo_url)  || FALLBACK_CLUB_LOGO;
 
-    // Metrics
+      const newest = topTweet(c) || (c.tweets && c.tweets[0]) || null;
+      const newestDate = newest ? tweetDate(newest) : (c.last_seen_at ? new Date(c.last_seen_at) : null);
+      c._lastSeen = newestDate;
+
+      tweetCount += (c.tweets?.length || 0);
+      return c;
+    });
+
+    return { rows: out, tweetCount };
+  }
+
+  // ---------------------------
+  // Filtering + Sorting
+  // ---------------------------
+  function applyFilters(rows) {
+    const q = (elSearch.value || "").toLowerCase().trim();
+    const status = elStatus.value || "";
     const use7d = elUse7d.checked;
-    $(".hotness-value").textContent = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
-    $(".certainty-value").textContent = fmtPct(displayCertainty(c));
+    const sort = elSort.value || "hotness";
 
-    // Last seen = newest tweet date in cluster (fallback to last_seen_at)
-    const newestTweet = topTweet({ tweets: c.tweets }) || (c.tweets && c.tweets[0]) || null;
-    const newestDate = newestTweet ? tweetDate(newestTweet) : (c.last_seen_at ? new Date(c.last_seen_at) : null);
-    $(".last-seen").textContent = fmtDate(newestDate);
+    let data = rows;
 
-    // Same-club (staying) presentation: hide origin and mark destination
-    const isSame = (c.normalized_origin_club && c.normalized_destination_club &&
-                    c.normalized_origin_club === c.normalized_destination_club) || c.is_renewal_or_stay;
-    if (isSame) {
-      $(".origin").style.display = "none";
-      $(".arrow").textContent = "🔒";
-      const destName = c.destination_club || c.normalized_destination_club || "—";
-      $(".destination-name").textContent = `${destName} (staying)`;
+    if (q) {
+      data = data.filter(c => searchHaystack(c).includes(q));
+    }
+    if (status) {
+      data = data.filter(c => (String(c.status_bin || "").toLowerCase() === status.toLowerCase()));
     }
 
-    // Tweets section (top + expandable list)
-    renderTweetsSection(node, c);
+    // Sorting
+    const keyers = {
+      hotness: (c) => Number(use7d ? c.hotness_7d : c.hotness_score) || 0,
+      certainty: (c) => displayCertainty(c) || 0,
+      date: (c) => (c._lastSeen instanceof Date && !isNaN(c._lastSeen)) ? +c._lastSeen : 0,
+      name: (c) => (c.player_name_display || c.normalized_player_name || "").toLowerCase(),
+    };
 
-    frag.appendChild(node);
+    const numericSort = ["hotness", "certainty", "date"].includes(sort);
+
+    if (sort === "name") {
+      data = [...data].sort((a,b) => keyers.name(a).localeCompare(keyers.name(b)));
+    } else {
+      data = [...data].sort((a,b) => (keyers[sort](b) - keyers[sort](a)));
+    }
+
+    return data;
   }
 
-  elCards.appendChild(frag);
-}
+  // ---------------------------
+  // Rendering — Tweets section
+  // ---------------------------
+  function renderTweetsSection(root, cluster) {
+    const details = root.querySelector(".tweet-details");
+    if (!details) return;
 
-/* =========================
-   Filtering & sorting
-========================= */
-function applyFilters(rows) {
-  const q = (elSearch.value || "").trim().toLowerCase();
-  const status = elStatus.value;
+    const listEl   = details.querySelector(".tweet-list");
+    const countEl  = details.querySelector(".tweet-count");
+    const sortLbl  = details.querySelector(".tweet-sort-chip");
+    const sortSel  = details.querySelector(".tweet-sort");
+    const moreBtn  = details.querySelector(".tweet-more");
+    const expandBtn= details.querySelector(".tweet-expand");
 
-  let out = rows;
+    const tweets = Array.isArray(cluster.tweets) ? cluster.tweets.slice() : [];
+    countEl.textContent = `(${tweets.length})`;
 
-  if (q) {
-    out = out.filter(c => {
-      const hay = [
-        c.player_name_display, c.normalized_player_name,
-        c.origin_club, c.normalized_origin_club,
-        c.destination_club, c.normalized_destination_club
-      ].filter(Boolean).map(String).join(" ").toLowerCase();
-      return hay.includes(q);
+    let mode = "engagement"; // or "newest"
+    sortSel.value = mode;
+
+    const engagementScore = (t) =>
+      safeNum(t.likes)*3 + safeNum(t.retweets)*5 + safeNum(t.quotes)*2 + safeNum(t.replies)*2 + safeNum(t.bookmarks) + safeNum(t.views)*0.01;
+
+    const resort = () => {
+      if (mode === "engagement") {
+        tweets.sort((a,b) => engagementScore(b) - engagementScore(a));
+      } else {
+        tweets.sort((a,b) => (+tweetDate(b) || 0) - (+tweetDate(a) || 0));
+      }
+    };
+
+    const CHUNK = 5;
+    let shown = 0;
+    let expanded = false;
+
+    const renderChunk = () => {
+      const end = expanded ? tweets.length : Math.min(tweets.length, shown + CHUNK);
+      for (let i = shown; i < end; i++) {
+        const t = tweets[i];
+        const item = document.createElement("div");
+        item.className = "tweet-item";
+
+        const text = document.createElement("div");
+        text.className = "tweet-text";
+        text.textContent = t.tweet_text || "";
+
+        const meta = document.createElement("div");
+        meta.className = "tweet-meta";
+        const d = tweetDate(t);
+        meta.innerHTML = [
+          d ? fmtDateShort(d) : "—",
+          `♥ ${safeNum(t.likes)}`,
+          `⇄ ${safeNum(t.retweets)}`,
+          `❝ ${safeNum(t.quotes)}`,
+          `💬 ${safeNum(t.replies)}`,
+          `🔖 ${safeNum(t.bookmarks)}`,
+          (safeNum(t.views) ? `👁 ${safeNum(t.views)}` : null),
+          `<a href="${t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`}" target="_blank" rel="noopener noreferrer">Open</a>`
+        ].filter(Boolean).join(" · ");
+
+        const right = document.createElement("div");
+        right.appendChild(meta);
+
+        item.appendChild(text);
+        item.appendChild(right);
+        listEl.appendChild(item);
+      }
+      shown = end;
+      moreBtn.hidden = shown >= tweets.length || expanded;
+    };
+
+    const rerenderList = () => {
+      listEl.innerHTML = "";
+      shown = 0;
+      resort();
+      renderChunk();
+    };
+
+    sortSel.addEventListener("change", () => {
+      mode = sortSel.value;
+      sortLbl.textContent = mode === "engagement" ? "Engagement" : "Newest";
+      rerenderList();
     });
+
+    moreBtn.addEventListener("click", () => renderChunk());
+    expandBtn.addEventListener("click", () => {
+      expanded = !expanded;
+      expandBtn.textContent = expanded ? "Collapse" : "Show all";
+      rerenderList();
+    });
+
+    // initial
+    resort();
+    renderChunk();
   }
 
-  if (status) {
-    out = out.filter(c => String(c.status_bin).toLowerCase() === status.toLowerCase());
+  // ---------------------------
+  // Rendering — Cards
+  // ---------------------------
+  function renderCards(data) {
+    elCards.classList.remove("list-mode");
+    elCards.innerHTML = "";
+    const tpl = document.getElementById("card-template");
+    const frag = document.createDocumentFragment();
+
+    for (const c of data) {
+      const node = tpl.content.cloneNode(true);
+      const $ = (sel) => node.querySelector(sel);
+
+      // Basics
+      $(".player-img").src = c.player_image_url || FALLBACK_PLAYER_IMG;
+      $(".player-name").textContent = c.player_name_display || c.normalized_player_name || "Unknown";
+
+      // Status
+      const status = String(c.status_bin || "—");
+      const pill = node.querySelector(".status-pill");
+      pill.textContent = status;
+      pill.className = `status-pill status-${statusKey(status)}`;
+
+      // Clubs
+      $(".origin-logo").src = c.origin_logo_url || FALLBACK_CLUB_LOGO;
+      $(".destination-logo").src = c.destination_logo_url || FALLBACK_CLUB_LOGO;
+      $(".origin-name").textContent = c.origin_club || c.normalized_origin_club || "—";
+      $(".destination-name").textContent = c.destination_club || c.normalized_destination_club || "—";
+
+      // Staying (origin == destination)
+      const isSame = (
+        (c.normalized_origin_club && c.normalized_destination_club &&
+         c.normalized_origin_club === c.normalized_destination_club) ||
+        c.is_renewal_or_stay
+      );
+      if (isSame) {
+        // replace arrow context by adding "(staying)" suffix
+        const dest = c.destination_club || c.normalized_destination_club || "—";
+        const destNameEl = node.querySelector(".destination .club-name");
+        destNameEl.textContent = `${dest} (staying)`;
+        const arrow = node.querySelector(".arrow");
+        arrow && arrow.remove();
+      }
+
+      // Metrics
+      const use7d = elUse7d.checked;
+      $(".hotness-value").textContent  = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
+      $(".certainty-value").textContent= fmtPct(displayCertainty(c));
+      const newest = topTweet(c) || (c.tweets && c.tweets[0]) || null;
+      const newestDate = newest ? tweetDate(newest) : (c._lastSeen instanceof Date ? c._lastSeen : null);
+      $(".last-seen").textContent = fmtDateShort(newestDate);
+
+      // Tweets section
+      renderTweetsSection(node, c);
+
+      frag.appendChild(node);
+    }
+    elCards.appendChild(frag);
   }
 
-  // Sort
-  const key = elSort.value || "hotness";
-  const use7d = elUse7d.checked;
-  const cmp = {
-    hotness: (a, b) => (use7d ? b.hotness_7d - a.hotness_7d : b.hotness_score - a.hotness_score),
-    certainty: (a, b) => displayCertainty(b) - displayCertainty(a),
-    date: (a, b) => {
-      const at = topTweet(a), bt = topTweet(b);
-      const ad = at ? tweetDate(at) : (a.last_seen_at ? new Date(a.last_seen_at) : null);
-      const bd = bt ? tweetDate(bt) : (b.last_seen_at ? new Date(b.last_seen_at) : null);
-      return (bd ? bd.getTime() : 0) - (ad ? ad.getTime() : 0);
-    },
-    name: (a, b) => (a.player_name_display || a.normalized_player_name || "").localeCompare(b.player_name_display || b.normalized_player_name || "")
-  }[key];
+  // ---------------------------
+  // Rendering — List (dense)
+  // ---------------------------
+  function renderList(data){
+    elCards.classList.add("list-mode");
+    elCards.innerHTML = "";
+    const tpl = document.getElementById("row-template");
+    const frag = document.createDocumentFragment();
 
-  out = out.slice().sort(cmp);
-  return out;
-}
+    for (const c of data){
+      const node = tpl.content.cloneNode(true);
+      const $ = (sel) => node.querySelector(sel);
 
-/* =========================
-   Boot
-========================= */
-(async function init() {
-  const now = new Date();
-  const bust = (window.APP_BUILD || `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}-${Date.now()}`);
-  elBuildTag.textContent = String(bust);
+      $(".row-avatar").src = c.player_image_url || FALLBACK_PLAYER_IMG;
+      $(".row-name").textContent = c.player_name_display || c.normalized_player_name || "Unknown";
 
-  const res = await fetch(`${JSON_PATH}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
-  const raw = await res.json();
+      const status = String(c.status_bin || "—");
+      const pill = node.querySelector(".status-pill");
+      pill.textContent = status;
+      pill.className = `status-pill status-${statusKey(status)}`;
 
-  // Process & render
-  window._rawRumors = raw; // for console debugging
-  const ready = processRumors(raw);
-  window._rumors = ready;
+      $(".origin-logo").src = c.origin_logo_url || FALLBACK_CLUB_LOGO;
+      $(".destination-logo").src = c.destination_logo_url || FALLBACK_CLUB_LOGO;
+      $(".origin-name").textContent = c.origin_club || c.normalized_origin_club || "—";
+      $(".destination-name").textContent = c.destination_club || c.normalized_destination_club || "—";
 
-  const draw = () => render(applyFilters(ready));
-  // initial render
-  draw();
+      const isSame = (
+        (c.normalized_origin_club && c.normalized_destination_club &&
+         c.normalized_origin_club === c.normalized_destination_club) ||
+        c.is_renewal_or_stay
+      );
+      if (isSame){
+        node.querySelector(".row .arrow")?.remove();
+        const dest = c.destination_club || c.normalized_destination_club || "—";
+        node.querySelector(".destination .club-name").textContent = `${dest} (staying)`;
+      }
 
-  // interactions
-  elSearch.addEventListener("input", draw);
-  elStatus.addEventListener("change", draw);
-  elUse7d.addEventListener("change", draw);
-  elSort.addEventListener("change", draw);
+      const use7d = elUse7d.checked;
+      node.querySelector(".hotness-value").textContent  = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
+      node.querySelector(".certainty-value").textContent= fmtPct(displayCertainty(c));
+      const newest = topTweet(c) || (c.tweets && c.tweets[0]) || null;
+      const newestDate = newest ? tweetDate(newest) : (c._lastSeen instanceof Date ? c._lastSeen : null);
+      node.querySelector(".last-seen").textContent = fmtDateShort(newestDate);
+
+      // Snippet from top tweet
+      const tt = topTweet(c);
+      node.querySelector(".row-sub .row-snippet").textContent = tt ? (tt.tweet_text || "").slice(0,170) + (tt.tweet_text && tt.tweet_text.length>170 ? "…" : "") : "—";
+
+      renderTweetsSection(node, c);
+
+      frag.appendChild(node);
+    }
+    elCards.appendChild(frag);
+  }
+
+  // Dispatcher
+  function render(data){
+    const mode = elViewMode?.value || "cards";
+    if (mode === "list") return renderList(data);
+    return renderCards(data);
+  }
+
+  // ---------------------------
+  // Init
+  // ---------------------------
+  async function init(){
+    try{
+      // Build tag
+      const tag = (window.APP_BUILD || ("dev-" + new Date().toISOString().slice(0,19)));
+      if (elBuildTag) elBuildTag.textContent = tag;
+
+      const url = `final_rumors_clean.json?v=${encodeURIComponent(tag)}`;
+      const res = await fetch(url, { cache: "no-store" });
+      const raw = await res.json();
+
+      // Process + render
+      const { rows, tweetCount } = processRumors(raw);
+      window._rumors = rows;
+
+      // Summary
+      elClusterCount.textContent = rows.length.toLocaleString();
+      elTweetCount.textContent   = tweetCount.toLocaleString();
+
+      // First render
+      render(applyFilters(rows));
+
+      // Controls
+      elSearch.addEventListener("input", () => render(applyFilters(window._rumors)));
+      elStatus.addEventListener("change", () => render(applyFilters(window._rumors)));
+      elUse7d.addEventListener("change", () => render(applyFilters(window._rumors)));
+      elSort.addEventListener("change", () => render(applyFilters(window._rumors)));
+      if (elViewMode) elViewMode.addEventListener("change", () => render(applyFilters(window._rumors)));
+    } catch (err){
+      console.error("Failed to initialize dashboard:", err);
+      elCards.innerHTML = `<p style="padding:16px;color:#fca5a5">Failed to load data.</p>`;
+    }
+  }
+
+  // Go
+  init();
 })();
