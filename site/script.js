@@ -408,43 +408,62 @@ function render(data) {
     const $ = sel => node.querySelector(sel);
 
     // Header
-    $(".player-img").src = c.player_image_url;
-    $(".player-name").textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
+    const img = $(".player-img");
+    if (img) img.src = c.player_image_url;
+
+    const nm = $(".player-name");
+    if (nm) nm.textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
 
     const status = c.status_bin || "—";
     const pill = $(".status-pill");
-    pill.textContent = status;
-    pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
+    if (pill) {
+      pill.textContent = status;
+      pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
+    }
 
     // Clubs
-    $(".origin-logo").src = c.origin_logo_url;
-    $(".destination-logo").src = c.destination_logo_url;
-    $(".origin-name").textContent = c.origin_club || c.normalized_origin_club || "—";
-    $(".destination-name").textContent = c.destination_club || c.normalized_destination_club || "—";
+    const ologo = $(".origin-logo");
+    const dlogo = $(".destination-logo");
+    if (ologo) ologo.src = c.origin_logo_url;
+    if (dlogo) dlogo.src = c.destination_logo_url;
+
+    const oname = $(".origin-name");
+    const dname = $(".destination-name");
+    if (oname) oname.textContent = c.origin_club || c.normalized_origin_club || "—";
+    if (dname) dname.textContent = c.destination_club || c.normalized_destination_club || "—";
 
     // Metrics
-    const use7d = elUse7d.checked;
-    $(".hotness-value").textContent = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
-    $(".certainty-value").textContent = fmtPct(c.decayed_certainty ?? c.certainty_score);
+    const use7d = elUse7d && elUse7d.checked;
+    const hv = $(".hotness-value");
+    const cv = $(".certainty-value");
+    if (hv) hv.textContent = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
+    if (cv) cv.textContent = fmtPct(c.decayed_certainty ?? c.certainty_score);
 
     // Last seen = newest tweet date in cluster (robust)
+    const ld = $(".last-seen");
     const newestDate = newestTweetDate(c);
-    $(".last-seen").textContent = fmtDate(newestDate);
+    if (ld) ld.textContent = fmtDate(newestDate);
 
-    // Featured Tweet (new logic)
+    // Featured Tweet (new logic, guarded + show/hide)
     const t = pickFeaturedTweet(c);
-    if (t) {
-      $(".tweet-link").href = t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`;
-      $(".tweet-text").textContent = t.tweet_text || "";
-      $(".likes").textContent     = `♥ ${safeNum(t.likes).toLocaleString()}`;
-      $(".retweets").textContent  = `⇄ ${safeNum(t.retweets).toLocaleString()}`;
-      $(".replies").textContent   = `💬 ${safeNum(t.replies).toLocaleString()}`;
-      $(".quotes").textContent    = `❝ ${safeNum(t.quotes).toLocaleString()}`;
-      $(".bookmarks").textContent = `🔖 ${safeNum(t.bookmarks).toLocaleString()}`;
-      $(".views").textContent     = `👁 ${safeNum(t.views).toLocaleString()}`;
-    } else {
-      $(".tweet-text").textContent = "No tweet details available.";
-      $(".tweet-link").removeAttribute("href");
+    const ft   = $(".featured-tweet");
+    const link = $(".tweet-link");
+    const text = $(".tweet-text");
+    const put  = (cls, val) => { const el = $("." + cls); if (el) el.textContent = val; };
+
+    if (t && ft && link && text) {
+      ft.hidden = false;
+      link.href = t.tweet_url || `https://twitter.com/i/web/status/${t.tweet_id}`;
+      text.textContent = t.tweet_text || "";
+      put("likes",     `♥ ${safeNum(t.likes).toLocaleString()}`);
+      put("retweets",  `⇄ ${safeNum(t.retweets).toLocaleString()}`);
+      put("replies",   `💬 ${safeNum(t.replies).toLocaleString()}`);
+      put("quotes",    `❝ ${safeNum(t.quotes).toLocaleString()}`);
+      put("bookmarks", `🔖 ${safeNum(t.bookmarks).toLocaleString()}`);
+      put("views",     `👁 ${safeNum(t.views).toLocaleString()}`);
+    } else if (ft) {
+      ft.hidden = true;
+      if (link) link.removeAttribute("href");
     }
 
     frag.appendChild(node);
@@ -479,7 +498,7 @@ function applyFilters(rows) {
 
   // Sort
   const key = elSort.value || "hotness";
-  const use7d = elUse7d.checked;
+  const use7d = elUse7d && elUse7d.checked;
   const cmp = {
     hotness: (a, b) => (use7d ? b.hotness_7d - a.hotness_7d : b.hotness_score - a.hotness_score),
     certainty: (a, b) => (b.decayed_certainty ?? b.certainty_score ?? 0) - (a.decayed_certainty ?? a.certainty_score ?? 0),
@@ -501,7 +520,7 @@ function applyFilters(rows) {
 (async function init() {
   const now = new Date();
   const bust = (window.APP_BUILD || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}-${Date.now()}`);
-  elBuildTag.textContent = String(bust);
+  if (elBuildTag) elBuildTag.textContent = String(bust);
 
   const res = await fetch(`${JSON_PATH}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
   const raw = await res.json();
@@ -516,8 +535,8 @@ function applyFilters(rows) {
   draw();
 
   // interactions
-  elSearch.addEventListener("input", draw);
-  elStatus.addEventListener("change", draw);
-  elUse7d.addEventListener("change", draw);
-  elSort.addEventListener("change", draw);
+  if (elSearch) elSearch.addEventListener("input", draw);
+  if (elStatus) elStatus.addEventListener("change", draw);
+  if (elUse7d)  elUse7d.addEventListener("change", draw);
+  if (elSort)   elSort.addEventListener("change", draw);
 })();

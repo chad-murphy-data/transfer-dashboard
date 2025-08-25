@@ -2,71 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <title>Transfer Credibility — Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Transfer Credibility Dashboard</title>
-
-  <link rel="icon" href="assets/ui/favicon.svg" />
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- cache-buster for JSON fetches -->
-  <script>window.APP_BUILD = "dev-" + new Date().toISOString().slice(0,19);</script>
+  <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
-  <header class="topbar">
+  <header class="site-header">
     <h1>Transfer Credibility</h1>
-    <div class="controls">
-      <input id="searchInput" type="search" placeholder="Search player or club…" aria-label="Search" />
-      <select id="statusFilter" aria-label="Filter by status">
-        <option value="">All statuses</option>
-        <option value="No Shot">No Shot (0.0)</option>
-        <option value="Ghosted">Ghosted (&lt;0.05)</option>
-        <option value="Speculative">Speculative (0.05–0.24)</option>
-        <option value="Linked">Linked (0.25–0.50)</option>
-        <option value="Advanced">Advanced (0.51–0.84)</option>
-        <option value="Imminent">Imminent (0.85–0.94)</option>
-        <option value="Confirmed">Confirmed (0.95–1.0)</option>
-      </select>
-      <label class="checkbox">
-        <input id="use7dHotness" type="checkbox" />
-        <span>Use 7-day hotness</span>
-      </label>
-      <select id="sortSelect" aria-label="Sort">
-        <option value="hotness">Sort: Hotness</option>
-        <option value="certainty">Sort: Certainty</option>
-        <option value="date">Sort: Most recent</option>
-        <option value="name">Sort: Player A→Z</option>
-      </select>
+    <div class="build-meta">
+      Build: <span id="buildTag">—</span>
     </div>
   </header>
 
-  <section id="summary" class="summary">
-    <span id="clusterCount">—</span> clusters •
-    <span id="tweetCount">—</span> tweets
+  <section class="controls">
+    <div class="control-group">
+      <label for="searchInput">Search</label>
+      <input id="searchInput" type="text" placeholder="Player or club…" />
+    </div>
+
+    <div class="control-group">
+      <label for="statusFilter">Status</label>
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option>Confirmed</option>
+        <option>Imminent</option>
+        <option>Advanced</option>
+        <option>Linked</option>
+        <option>Speculative</option>
+        <option>Ghosted</option>
+        <option>No Shot</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="sortSelect">Sort</label>
+      <select id="sortSelect">
+        <option value="hotness">Hotness</option>
+        <option value="certainty">Certainty</option>
+        <option value="date">Last seen</option>
+        <option value="name">Player name</option>
+      </select>
+    </div>
+
+    <div class="control-group checkbox">
+      <input id="use7dHotness" type="checkbox" />
+      <label for="use7dHotness">7-day hotness</label>
+    </div>
+
+    <div class="totals">
+      <span><strong id="clusterCount">0</strong> clusters</span>
+      <span><strong id="tweetCount">0</strong> tweets</span>
+    </div>
   </section>
 
-  <main id="cards" class="cards" aria-live="polite"></main>
+  <main id="cards" class="cards"></main>
 
   <!-- Card template -->
   <template id="card-template">
     <article class="card">
-      <div class="card-media">
-        <img class="player-img" alt="" src="" onerror="this.src='assets/ui/defaults/player_silhouette.png'">
+      <div class="card-left">
+        <img class="player-img" src="" alt="" />
       </div>
-      <div class="card-body">
+
+      <div class="card-main">
         <div class="card-header">
-          <h2 class="player-name"></h2>
-          <span class="status-pill"></span>
+          <h2 class="player-name">Player</h2>
+          <span class="status-pill">Status</span>
         </div>
 
         <div class="clubs">
           <div class="club origin">
-            <img class="club-logo origin-logo" alt="" src="" onerror="this.src='assets/ui/defaults/club_placeholder.png'">
-            <span class="club-name origin-name"></span>
+            <img class="origin-logo" src="" alt="Origin club" />
+            <span class="origin-name">—</span>
           </div>
-          <div class="arrow">→</div>
+          <span class="transfer-arrow">→</span>
           <div class="club destination">
-            <img class="club-logo destination-logo" alt="" src="" onerror="this.src='assets/ui/defaults/club_placeholder.png'">
-            <span class="club-name destination-name"></span>
+            <img class="destination-logo" src="" alt="Destination club" />
+            <span class="destination-name">—</span>
           </div>
         </div>
 
@@ -80,45 +92,36 @@
             <div class="value certainty-value">—</div>
           </div>
           <div class="metric">
-            <div class="label">Last seen</div>
+            <div class="label">Last Seen</div>
             <div class="value last-seen">—</div>
           </div>
         </div>
 
-        <!-- Tweets panel (matches script.js renderTweetsSection) -->
+        <!-- Featured Tweet block (added) -->
+        <div class="featured-tweet" hidden>
+          <a class="tweet-link" target="_blank" rel="noopener">
+            <p class="tweet-text"></p>
+            <div class="tweet-metrics">
+              <span class="likes"></span>
+              <span class="retweets"></span>
+              <span class="replies"></span>
+              <span class="quotes"></span>
+              <span class="bookmarks"></span>
+              <span class="views"></span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Optional: Collapsible raw tweets list (keep if you use it)
         <details class="tweet-details">
-          <summary>
-            <span class="tweet-summary-label">Tweets</span>
-            <span class="tweet-count">(0)</span>
-            <span class="tweet-sort-label">• Top by <strong class="tweet-sort-chip">Engagement</strong></span>
-          </summary>
-
-          <div class="tweet-controls">
-            <label>
-              Sort by
-              <select class="tweet-sort">
-                <option value="engagement">Engagement</option>
-                <option value="newest">Newest</option>
-              </select>
-            </label>
-            <button type="button" class="tweet-expand">Show all</button>
-          </div>
-
-          <div class="tweet-list" role="list"></div>
-          <button type="button" class="tweet-more" hidden>Show more</button>
+          <summary>Tweets</summary>
+          <div class="tweet-list"><!-- populated elsewhere if needed --></div>
         </details>
+        -->
       </div>
     </article>
   </template>
 
-  <footer class="footer">
-    <span id="buildInfo">Build: <code id="buildTag"></code></span>
-  </footer>
-
   <script src="script.js" defer></script>
-
-  <noscript>
-    <p>This dashboard requires JavaScript to load the data.</p>
-  </noscript>
 </body>
 </html>
