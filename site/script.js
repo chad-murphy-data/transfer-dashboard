@@ -2,7 +2,7 @@
    - Fetches final_rumors_clean.json (cache-busted)
    - Cleans & filters data (mega-bin guard, path fixes)
    - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Renders responsive cards with FEATURED TWEET selection (credibility + destination + HWG override)
+   - Renders responsive cards with FEATURED TWEET selection (credibility + destination)
 */
 
 /* =========================
@@ -137,7 +137,7 @@ const fmtDate = d => {
 
 /* =========================
    FEATURED TWEET RANKING
-   (Credibility + destination + single-player + recency/engagement + HWG override)
+   (Credibility + destination + single-player + recency/engagement)
 ========================= */
 
 // MITCHARD-tier weights (default for others = 0.6)
@@ -206,19 +206,20 @@ const isDenialTweet = t => {
   const txt = toLower(t.tweet_text || "");
   const patterns = [
     "deal off", "not joining", "no longer in talks", "no agreement", "not happening",
-    "denies", "denied", "rejects", "ruled out", "won't join", "will not join", "fake", "false"
+    "denies", "denied", "rejects", "ruled out", "won't join", "will not join"
   ];
   return patterns.some(p => txt.includes(p));
 };
 
 function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
+  // Filter guard (we'll apply stricter filters before calling score)
   if (!t) return -Infinity;
 
   const handle = getHandle(t);
   const cred = MITCHARD_WEIGHTS[handle] ?? 0.60;
   const bin  = BIN_SCORE[c.status_bin] ?? 0.70;
 
-  const dest = sameDestAsCluster(t, c) ? 1 : 0;  // soft bonus, not a filter
+  const dest = sameDestAsCluster(t, c) ? 1 : 0;
   const single = isSinglePlayerTweet(t) ? 1 : 0;
 
   const likes = safeNum(t.likes || t.favorite_count);
@@ -233,6 +234,7 @@ function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
   const ageDays = d ? (nowMs - d.getTime()) / 86400000 : 0;
   const recency = Math.exp(-(isNaN(ageDays) ? 0 : ageDays) / 21); // ~3-week half-life-ish
 
+  // If denials aren't allowed here, strongly penalize
   const denialPenalty = (!allowDenial && isDenialTweet(t)) ? 0.25 : 1.0;
 
   return (5*cred + 4*bin + 2*dest + 1.5*single + 0.5*eng) * recency * denialPenalty;
@@ -252,34 +254,6 @@ function pickFeaturedTweet(cluster) {
     if (t) return t;
   }
 
-  // Ultra-high-priority override: trusted "Here we go" beats everything
-  const hwgPool = tweets.filter(t =>
-    samePlayerAsCluster(t, cluster) &&
-    /here we go/i.test(t.tweet_text || "") &&
-    (allowDenial || !isDenialTweet(t))
-  );
-  if (hwgPool.length) {
-    const scoreHWG = (t) => {
-      const handle = getHandle(t);
-      const cred = MITCHARD_WEIGHTS[handle] ?? 0.60;
-      const d = tweetDate(t);
-      const ageDays = d ? (now - d.getTime()) / 86400000 : 0;
-      const recency = Math.exp(-(isNaN(ageDays) ? 0 : ageDays) / 14); // snappier for HWG
-      const likes = safeNum(t.likes || t.favorite_count);
-      const rts   = safeNum(t.retweets || t.retweet_count);
-      const quotes= safeNum(t.quotes || t.quote_count);
-      const replies = safeNum(t.replies || t.reply_count);
-      const eng = Math.log10(1 + likes + 2*rts + 3*quotes + replies);
-      return (8 * cred) * recency + eng; // heavy cred + recency
-    };
-    hwgPool.sort((a,b) => {
-      const s = scoreHWG(b) - scoreHWG(a);
-      if (s) return s;
-      return (tweetDate(b)?.getTime() || 0) - (tweetDate(a)?.getTime() || 0);
-    });
-    return hwgPool[0];
-  }
-
   // Hard filters — strictest first
   const passes = [
     // 1) same player + same destination + single-player + (denials only if No Shot)
@@ -290,7 +264,7 @@ function pickFeaturedTweet(cluster) {
     t => samePlayerAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
     // 4) same player
     t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
-    // 5) anything (still drop denials unless No Shot)
+    // 5) anything
     t => allowDenial || !isDenialTweet(t)
   ];
 
@@ -529,18 +503,7 @@ function applyFilters(rows) {
   const bust = (window.APP_BUILD || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}-${Date.now()}`);
   elBuildTag.textContent = String(bust);
 
-  // Try chosen path first; if it 404s, auto-fallback to the other file
-  const chosen = `${JSON_PATH}?v=${encodeURIComponent(bust)}`;
-  let res = await fetch(chosen, { cache: "no-store" });
-  if (!res.ok) {
-    const alt = JSON_PATH.includes(".featured.")
-      ? "final_rumors_clean.json"
-      : "final_rumors_clean.featured.json";
-    try {
-      const res2 = await fetch(`${alt}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
-      if (res2.ok) res = res2;
-    } catch {}
-  }
+  const res = await fetch(`${JSON_PATH}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
   const raw = await res.json();
 
   // Process & render
@@ -549,6 +512,7 @@ function applyFilters(rows) {
   window._rumors = ready;
 
   const draw = () => render(applyFilters(ready));
+  // initial render
   draw();
 
   // interactions
