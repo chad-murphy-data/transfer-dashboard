@@ -14,7 +14,7 @@
 
 ## Live demo
 
-* **App:** [https://football-transfer-tracker.netlify.app/]
+* **App:** https://football-transfer-tracker.netlify.app/
 
 ---
 
