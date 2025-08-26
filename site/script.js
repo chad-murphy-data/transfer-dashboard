@@ -2,6 +2,7 @@
    - Confidence-first + "definitive" tweet picker (HGW/official/etc.)
    - Destination mirrors featured tweet; if missing, infer from text
    - Certainty is continuous: blend of bin + text-confidence + explicit score
+   - Status pill is robust: uses status_bin/status/bin; else derives from certainty
 */
 
 //////////////////////////////
@@ -450,6 +451,35 @@ function normalizeCertainty(cluster) {
 }
 
 //////////////////////////////
+// Status derivation (robust display)
+//////////////////////////////
+const STATUS_LABELS = ["Confirmed","Imminent","Advanced","Linked","Speculative","Ghosted","No Shot"];
+
+function deriveStatusFromCertainty(p) {
+  // thresholds tuned for a nice spread; adjust as you like
+  if (p >= 0.985) return "Confirmed";
+  if (p >= 0.940) return "Imminent";
+  if (p >= 0.880) return "Advanced";
+  if (p >= 0.700) return "Linked";
+  if (p >= 0.550) return "Speculative";
+  return "Ghosted";
+}
+
+function getDisplayStatus(cluster) {
+  // Prefer any status field in the JSON (don't override)
+  const raw = (cluster.status_bin ?? cluster.status ?? cluster.bin ?? "").toString().trim();
+  if (raw) {
+    // normalize spacing/case only
+    const norm = raw.replace(/\s+/g, " ").trim();
+    // Title-case known labels; otherwise just title-case whatever string we got
+    const tc = norm.replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+    return tc;
+  }
+  // Fallback: derive from our continuous certainty
+  return deriveStatusFromCertainty(cluster.decayed_certainty ?? 0);
+}
+
+//////////////////////////////
 // Data processing
 //////////////////////////////
 function processRumors(rows) {
@@ -555,11 +585,12 @@ function render(data) {
     const nm = $(".player-name");
     if (nm) nm.textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
 
-    const status = c.status_bin || "—";
+    // Status: prefer JSON value(s); else derive from certainty
+    const statusText = getDisplayStatus(c);
     const pill = $(".status-pill");
     if (pill) {
-      pill.textContent = status;
-      pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
+      pill.textContent = statusText;
+      pill.className = `status-pill status-${statusText.toLowerCase().replace(/\s+/g, "-")}`;
     }
 
     // Pick featured tweet first
@@ -644,7 +675,10 @@ function applyFilters(rows) {
   }
 
   if (status) {
-    out = out.filter(c => String(c.status_bin).toLowerCase() === status.toLowerCase());
+    out = out.filter(c => {
+      const disp = getDisplayStatus(c).toLowerCase();
+      return disp === status.toLowerCase();
+    });
   }
 
   const key = elSort.value || "hotness";
