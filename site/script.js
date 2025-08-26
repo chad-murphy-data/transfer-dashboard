@@ -16,12 +16,11 @@ const JSON_PATH = params.has("featured")
 // Optional URL flags
 const FORCE_RESCORE = params.has("rescore") || params.has("nofeatured");
 
-// weights for engagement proxy
 const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
 const MEGACLUSTER_TWEET_CAP = 80;
 const TWITTER_EPOCH_MS = 1288834974657;
 
-// Fallback assets (keep exactly where they are in your repo)
+// Fallback assets (keep paths as in your repo)
 const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
 const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
@@ -46,7 +45,7 @@ const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
 const pad2     = n => String(n).padStart(2, "0");
 const toLower  = v => (v == null ? "" : String(v).trim().toLowerCase());
 
-// For labels like “FC”, “CF”, etc.
+// club-key comparator (handles FC/CF/etc.)
 const clubKey = s => String(s || "")
   .toLowerCase()
   .replace(/[^\w\s]/g, " ")
@@ -120,12 +119,17 @@ const fmtDate = d => (!(d instanceof Date) || isNaN(d))
   ? "—"
   : d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-// robust <img> setter with fallback on 404/MIME errors
+// simple image setter: use JSON URL as-is; swap to fallback on error
 function setSafeImage(imgEl, url, fallback) {
   if (!imgEl) return;
   const src = normPath(url) || fallback;
   imgEl.loading = "lazy";
-  imgEl.onerror = () => { if (imgEl.src !== location.origin + "/" + fallback && !imgEl.dataset.fallbackApplied) { imgEl.dataset.fallbackApplied = "1"; imgEl.src = fallback; } };
+  imgEl.onerror = () => {
+    if (imgEl.dataset.fallbackApplied !== "1") {
+      imgEl.dataset.fallbackApplied = "1";
+      imgEl.src = fallback;
+    }
+  };
   imgEl.src = src;
 }
 
@@ -238,7 +242,7 @@ function pickFeaturedTweet(cluster) {
   const status = cluster.status_bin || "Linked";
   const allowDenial = (status === "No Shot");
 
-  // Respect pre-selection unless rescore forced
+  // Respect precomputed selection if present & not forcing rescore
   if (cluster.featured_tweet_id && !FORCE_RESCORE) {
     const t = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
     if (t) return t;
@@ -308,7 +312,7 @@ function processRumors(rows) {
     };
   });
 
-  // drop mega-bin & absurd clusters
+  // Filter out mega-bin & absurd clusters
   fixed = fixed.filter(c => {
     const noPlayer = !(c.normalized_player_name && String(c.normalized_player_name).trim());
     const noClubs  = !(c.origin_club && String(c.origin_club).trim()) &&
@@ -317,13 +321,13 @@ function processRumors(rows) {
     return !( (noPlayer && noClubs) || tooMany );
   });
 
-  // hotness overall
+  // Recompute overall hotness
   const raw = fixed.map(clusterRawScore);
   const m = mean(raw);
   const s = std(raw, m) || 1;
   fixed = fixed.map((r, i) => ({ ...r, hotness_score: zToHotness((raw[i] - m) / s) }));
 
-  // hotness 7d
+  // 7-day hotness
   const now = new Date();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
   const raw7 = fixed.map(r => {
@@ -346,14 +350,7 @@ function processRumors(rows) {
     fixed = fixed.map(r => ({ ...r, hotness_7d: r.hotness_score }));
   }
 
-  // keep URLs as provided; fallbacks happen at render time
-  fixed = fixed.map(r => ({
-    ...r,
-    origin_logo_url: r.origin_logo_url || FALLBACK_CLUB_LOGO,
-    destination_logo_url: r.destination_logo_url || FALLBACK_CLUB_LOGO,
-    player_image_url: r.player_image_url || FALLBACK_PLAYER_IMG,
-  }));
-
+  // leave URLs as provided; fallbacks happen at render-time
   return fixed;
 }
 
@@ -374,8 +371,8 @@ function render(data) {
     const node = elCardTpl.content.cloneNode(true);
     const $ = sel => node.querySelector(sel);
 
-    // Header & images (use URLs exactly as in JSON; only fallback on error)
-    setSafeImage($(".player-img"), c.player_image_url, FALLBACK_PLAYER_IMG);
+    // Header & images (use JSON URL as-is; fallback on error)
+    setSafeImage($(".player-img"), c.player_image_url || FALLBACK_PLAYER_IMG, FALLBACK_PLAYER_IMG);
 
     const nm = $(".player-name");
     if (nm) nm.textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
@@ -387,9 +384,9 @@ function render(data) {
       pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
     }
 
-    // Clubs (use JSON-provided logos; only fallback on error)
-    setSafeImage($(".origin-logo"),      c.origin_logo_url,      FALLBACK_CLUB_LOGO);
-    setSafeImage($(".destination-logo"), c.destination_logo_url, FALLBACK_CLUB_LOGO);
+    // Clubs (logos from JSON; fallback on error)
+    setSafeImage($(".origin-logo"),      c.origin_logo_url || FALLBACK_CLUB_LOGO,      FALLBACK_CLUB_LOGO);
+    setSafeImage($(".destination-logo"), c.destination_logo_url || FALLBACK_CLUB_LOGO, FALLBACK_CLUB_LOGO);
 
     const oname = $(".origin-name");
     const dname = $(".destination-name");
@@ -407,7 +404,7 @@ function render(data) {
     const ld = $(".last-seen");
     if (ld) ld.textContent = fmtDate(newestTweetDate(c));
 
-    // Featured Tweet
+    // Featured Tweet (render + force destination to follow the tweet)
     const t = pickFeaturedTweet(c);
     const ft   = $(".featured-tweet");
     const link = $(".tweet-link");
@@ -425,14 +422,19 @@ function render(data) {
       put("bookmarks", `🔖 ${safeNum(t.bookmarks).toLocaleString()}`);
       put("views",     `👁 ${safeNum(t.views).toLocaleString()}`);
 
-      // >>> NEW: if the featured tweet has a destination that doesn't match the card,
-      // mirror it on the card so labels/logos don't contradict the tweet (KDB → Napoli).
+      // >>> ALWAYS mirror the featured tweet's destination onto the card if the tweet has one.
       const tweetDest = t.destination_club || t.dest_club || t.normalized_destination_club;
-      if (tweetDest && dname && clubKey(tweetDest) && clubKey(dname.textContent || "") !== clubKey(tweetDest)) {
-        dname.textContent = tweetDest; // show Napoli instead of Chicago Fire
-        // If your JSON carries per-tweet destination_logo_url, use it; otherwise leave logo as-is.
+      if (tweetDest) {
+        const dnameEl = $(".destination-name");
+        if (dnameEl) dnameEl.textContent = tweetDest;  // e.g. "Napoli" for KDB
+
+        // If the tweet carries a destination logo URL, show it as well.
         if (t.destination_logo_url) {
-          setSafeImage($(".destination-logo"), t.destination_logo_url, FALLBACK_CLUB_LOGO);
+          const dlogoEl = $(".destination-logo");
+          if (dlogoEl) {
+            dlogoEl.onerror = () => { if (dlogoEl.src !== FALLBACK_CLUB_LOGO) dlogoEl.src = FALLBACK_CLUB_LOGO; };
+            dlogoEl.src = t.destination_logo_url;
+          }
         }
       }
     } else if (ft) {
