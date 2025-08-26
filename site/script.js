@@ -1,10 +1,7 @@
 /* Transfer Credibility — client app
-   - Fetches final_rumors_clean.json (cache-busted)
-   - Cleans & filters data (mega-bin guard, path fixes)
-   - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Featured tweet picked with CONFIDENCE-FIRST logic
-   - Destination (name + logo) mirrors featured tweet; if missing, inferred from text via club index
-   - Certainty normalized (Confirmed=100%; else certainty∈(0,1]; else bin fallback)
+   - Confidence-first + "definitive" tweet picker (HGW/official/etc.)
+   - Destination mirrors featured tweet; if missing, infer from text
+   - Certainty normalized (Confirmed=100%, explicit 0–1 or 0–100 respected, else bin fallback)
 */
 
 //////////////////////////////
@@ -44,17 +41,14 @@ const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
 const pad2     = n => String(n).padStart(2, "0");
 const toLower  = v => (v == null ? "" : String(v).trim().toLowerCase());
+const titleCase = s => String(s || "").replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
 
-// Club key normalizer (handles punctuation and FC/CF/etc.)
 const clubKey = s => String(s || "")
   .toLowerCase()
   .replace(/[^\w\s]/g, " ")
   .replace(/\b(fc|cf|afc|sc|ssc|ac|bk)\b/g, "")
   .replace(/\s+/g, " ")
   .trim();
-
-// Small title-case helper for inferred names
-const titleCase = s => String(s || "").replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
 
 const snowflakeToDate = id => new Date(Number(BigInt(id) >> 22n) + TWITTER_EPOCH_MS);
 
@@ -122,7 +116,6 @@ const fmtDate = d => (!(d instanceof Date) || isNaN(d))
   ? "—"
   : d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-// Use JSON path as-is; swap to fallback on error (matches the version where headshots worked)
 function setSafeImage(imgEl, url, fallback) {
   if (!imgEl) return;
   const src = normPath(url) || fallback;
@@ -137,7 +130,7 @@ function setSafeImage(imgEl, url, fallback) {
 }
 
 //////////////////////////////
-// Confidence-first featured tweet
+// Credibility & bins
 //////////////////////////////
 const MITCHARD_WEIGHTS = {
   "@FabrizioRomano": 1.00,
@@ -168,12 +161,16 @@ const BIN_SCORE = {
   "No Shot": 0.05
 };
 
+//////////////////////////////
+// Confidence & "definitive" detection
+//////////////////////////////
 const getHandle = t => {
   let h = t?.source_handle || t?.author || t?.screen_name || t?.user_handle || "";
   h = h.replace(/^https?:\/\/(www\.)?twitter\.com\//i, "");
   if (!h) return "";
   return h.startsWith("@") ? h : ("@" + h);
 };
+
 const isDenialTweet = t => {
   if (t.is_denial != null) return !!t.is_denial;
   const txt = toLower(t.tweet_text || "");
@@ -182,6 +179,7 @@ const isDenialTweet = t => {
     "denies","denied","rejects","ruled out","won't join","will not join"
   ].some(p => txt.includes(p));
 };
+
 const isSinglePlayerTweet = t => {
   const pc = t.player_count;
   if (pc != null) return Number(pc) === 1;
@@ -189,6 +187,7 @@ const isSinglePlayerTweet = t => {
   if (Object.prototype.hasOwnProperty.call(t, "single_player")) return !!t.single_player;
   return true;
 };
+
 const samePlayerAsCluster = (t, c) => {
   const clusterPlayer = toLower(c.normalized_player_name || c.player || c.player_name || c.player_name_display);
   if (!clusterPlayer) return true;
@@ -196,34 +195,39 @@ const samePlayerAsCluster = (t, c) => {
   return tweetPlayer ? tweetPlayer === clusterPlayer : true;
 };
 
+// Textual confidence (0–1), with special-casing for "definitive" language
 function confidenceFromText(t) {
   const txt = toLower(t.tweet_text || "");
   let s = 0.30;
   const bump = (re, val) => { if (re.test(txt)) s = Math.max(s, val); };
 
-  // Tier 1
-  bump(/\bhere we go\b/, 1.00);
+  // Tier 1: definitive
+  bump(/\bhere\s*we\s*go\b/, 1.00);
   bump(/\bofficial(?:ly)?\b/, 0.98);
   bump(/\b(full|total)\s+agreement\b|\bagreement (reached|in place)\b/, 0.96);
   bump(/\bpaperwork\b.*(signed|completed)|\bsigning\b|\bsigned\b/, 0.95);
-  bump(/\bmedical\b.*(completed|done)|\bshirt number\b|\bunveiled\b/, 0.94);
+  bump(/\bmedical\b.*(completed|done|passed)|\bshirt number\b|\bunveiled\b/, 0.94);
 
-  // Tier 2
+  // Tier 2: near-definitive
   bump(/\bimminent\b|\bset to join\b|\bvery close\b|\bclose to\b/, 0.90);
   bump(/\badvanced (talks|negotiations)\b|\bverbal agreement\b/, 0.88);
   bump(/\bfee\b.*(agreed|agreement)|\bdeal\b.*(agreed|in place)/, 0.86);
 
-  // Tier 3
+  // Tier 3: strong signals
   bump(/\bbid (submitted|sent|made)\b|\boffer (made|sent|submitted)\b/, 0.78);
   bump(/\bproposal\b|\bin (talks|negotiations)\b|\bcontacts\b/, 0.72);
 
-  // Linking-only
+  // Low-confidence/linking
   bump(/\binterest(ed)?\b|\bmonitor(ing|ed)\b|\blinked\b|\btarget\b/, 0.55);
+
+  // Emojis that often accompany definitives
+  bump(/[🔐✅🤝📝✍️]/, Math.max(s, 0.92));
 
   if (isDenialTweet(t)) s = Math.min(s, 0.15);
   return s;
 }
 
+// Small nudges from destination alignment / mentions (non-decisive)
 function destinationNudge(t, c) {
   const cd = c.destination_club || c.normalized_destination_club || "";
   const td = t.destination_club || t.dest_club || t.normalized_destination_club || "";
@@ -242,6 +246,27 @@ function clubMentionNudge(t) {
   return k && txt.includes(k) ? 0.05 : 0;
 }
 
+// "Definitive" score used for an override pool (so HGW/official always win)
+function definitiveScore(t) {
+  const txt = toLower(t.tweet_text || "");
+  let d = 0;
+
+  if (/\bhere\s*we\s*go\b/.test(txt)) d = Math.max(d, 1.00);
+  if (/\bofficial(?:ly)?\b/.test(txt)) d = Math.max(d, 0.98);
+  if (/\b(full|total)\s+agreement\b|\bagreement (reached|in place)\b/.test(txt)) d = Math.max(d, 0.96);
+  if (/\bpaperwork\b.*(signed|completed)|\bsigning\b|\bsigned\b/.test(txt)) d = Math.max(d, 0.95);
+  if (/\bmedical\b.*(completed|done|passed)|\bshirt number\b|\bunveiled\b/.test(txt)) d = Math.max(d, 0.94);
+  if (/[🔐✅🤝📝✍️]/.test(txt)) d = Math.max(d, 0.93);
+
+  // Slight boost if from top source
+  const cred = MITCHARD_WEIGHTS[getHandle(t)] ?? 0.60;
+  d = Math.max(d, (cred >= 0.95 ? 0.92 : 0));
+
+  if (isDenialTweet(t)) d = Math.min(d, 0.10);
+  return d;
+}
+
+// Combined score (confidence-first)
 function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
   if (!t) return -Infinity;
 
@@ -265,6 +290,7 @@ function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
   const denialPenalty = (!allowDenial && isDenialTweet(t)) ? 0.6 : 1.0;
   const nudges = destinationNudge(t, c) + clubMentionNudge(t);
 
+  // Confidence dominates; credibility next; then bin; destination/mentions are nudges
   return (10*conf + 4*cred + 3*bin + 1.2*single + 0.6*eng + 1.0*nudges) * recency * denialPenalty;
 }
 
@@ -276,11 +302,30 @@ function pickFeaturedTweet(cluster) {
   const status = cluster.status_bin || "Linked";
   const allowDenial = (status === "No Shot");
 
+  // --- Definitive override pool: if any tweet is 'definitive', pick from that set
+  const withDef = tweets
+    .filter(t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)))
+    .map(t => ({ t, def: definitiveScore(t) }));
+  const maxDef = withDef.reduce((m, x) => Math.max(m, x.def), 0);
+  if (maxDef >= 0.95) {
+    const pool = withDef.filter(x => x.def >= maxDef - 0.03).map(x => x.t);
+    pool.sort((a,b) => {
+      const dt = (tweetDate(b)?.getTime() || 0) - (tweetDate(a)?.getTime() || 0);
+      if (dt !== 0) return dt;
+      const eb = tweetEngagement(b), ea = tweetEngagement(a);
+      if (eb !== ea) return eb - ea;
+      return String(b.tweet_id).localeCompare(String(a.tweet_id));
+    });
+    return pool[0] || null;
+  }
+
+  // Otherwise, honor pre-stamped choice unless we're forcing a rescore
   if (cluster.featured_tweet_id && !FORCE_RESCORE) {
     const preset = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
     if (preset) return preset;
   }
 
+  // Confidence-first pool (same player; denials allowed only if cluster is No Shot)
   const pool = tweets.filter(t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)));
   if (!pool.length) return tweets[0] || null;
 
@@ -299,16 +344,16 @@ function pickFeaturedTweet(cluster) {
 }
 
 //////////////////////////////
-// Club index + certainty normalization
+// Club index & inference
 //////////////////////////////
-const CLUB_INDEX = new Map();        // key -> display name
-const CLUB_LOGO_INDEX = new Map();   // key -> logo url (best seen)
+const CLUB_INDEX = new Map();      // key -> display name
+const CLUB_LOGO_INDEX = new Map(); // key -> logo url
 
 function indexClub(name, logoUrl) {
   if (!name) return;
   const key = clubKey(name);
   if (!key) return;
-  if (!CLUB_INDEX.has(key) || (name.length > CLUB_INDEX.get(key).length)) {
+  if (!CLUB_INDEX.has(key) || (name.length > (CLUB_INDEX.get(key)?.length || 0))) {
     CLUB_INDEX.set(key, name);
   }
   if (logoUrl && !CLUB_LOGO_INDEX.has(key)) {
@@ -317,11 +362,35 @@ function indexClub(name, logoUrl) {
 }
 
 function inferDestFromText(t, cluster) {
-  const txt = toLower(t?.tweet_text || "");
+  const raw  = t?.tweet_text || "";
+  const txt  = toLower(raw);
   if (!txt) return null;
 
-  // Prefer longest matching known club name present in the text, excluding the origin club
   const originKey = clubKey(cluster.origin_club || cluster.normalized_origin_club || "");
+
+  // Pattern: "Real Madrid to pay ... to Liverpool to have Trent"
+  // → Dest = first club, Origin = second club
+  {
+    const m = raw.match(
+      /([A-Z][A-Za-z]+(?:\s[A-Z][A-Za-z]+){0,3})\s+to pay[\s\S]+?\s+to\s+([A-Z][A-Za-z]+(?:\s[A-Z][A-Za-z]+){0,3})\s+to have/i
+    );
+    if (m) {
+      const candDest = titleCase(m[1]);
+      const candOrig = titleCase(m[2]);
+      if (clubKey(candDest) !== originKey) return candDest;
+    }
+  }
+
+  // Generic: "to/join/signing for/move to/headed to <Club>" — skip known origin
+  {
+    const m = raw.match(/\b(?:to|join(?:ing)?|sign(?:ing)? for|move to|headed to)\s+([A-Z][A-Za-z]+(?:\s[A-Z][A-Za-z]+){0,3})/);
+    if (m) {
+      const name = titleCase(m[1]);
+      if (clubKey(name) !== originKey) return name;
+    }
+  }
+
+  // Fallback: longest known club present in text (excluding origin)
   let bestKey = null, bestLen = 0;
   for (const [key, display] of CLUB_INDEX.entries()) {
     if (!key || key === originKey) continue;
@@ -329,27 +398,26 @@ function inferDestFromText(t, cluster) {
   }
   if (bestKey) return CLUB_INDEX.get(bestKey);
 
-  // Regex fallback: "to/ join/ signing for/ move to <Proper Noun(s)>"
-  const m = (t.tweet_text || "").match(/\b(?:to|join(?:ing)?|sign(?:ing)? for|move to|headed to)\s+([A-Z][A-Za-z]+(?:\s[A-Z][A-Za-z]+){0,3})/);
-  if (m && m[1]) return titleCase(m[1]);
   return null;
 }
 
+//////////////////////////////
+// Certainty normalization
+//////////////////////////////
 function normalizeCertainty(cluster) {
-  // 1) Confirmed => 1.0
   if (cluster.status_bin === "Confirmed") return 1.0;
 
-  // 2) Use explicit certainty if valid (0 < c <= 1)
   let c = cluster.certainty_score;
-  if (c === "" || c == null) c = null;
-  else c = Number(c);
-  if (!(c > 0 && c <= 1)) c = null;
+  if (c === "" || c == null || !Number.isFinite(Number(c))) {
+    c = null;
+  } else {
+    c = Number(c);
+    if (c > 1 && c <= 100) c = c / 100;       // accept 0–100
+    if (!(c >= 0 && c <= 1)) c = null;
+  }
 
-  if (c != null) return c;
-
-  // 3) Fallback to bin score
-  const fallback = BIN_SCORE[cluster.status_bin];
-  return Number.isFinite(fallback) ? fallback : 0.70;
+  const fb = Number.isFinite(BIN_SCORE[cluster.status_bin]) ? BIN_SCORE[cluster.status_bin] : 0.70;
+  return c == null ? fb : Math.max(c, fb);
 }
 
 //////////////////////////////
@@ -359,7 +427,7 @@ function processRumors(rows) {
   let fixed = rows.map(r => {
     const tweets = Array.isArray(r.tweets) ? r.tweets.map(t => {
       const d = tweetDate(t);
-      // index any explicit per-tweet destination for later logo lookup
+      // index per-tweet destination (if present)
       if (t.destination_club || t.dest_club || t.normalized_destination_club) {
         indexClub(t.destination_club || t.dest_club || t.normalized_destination_club, t.destination_logo_url);
       }
@@ -378,16 +446,14 @@ function processRumors(rows) {
       };
     }) : [];
 
-    // Index cluster clubs/logos into global map
+    // index cluster clubs into global maps
     indexClub(r.origin_club || r.normalized_origin_club, r.origin_logo_url);
     indexClub(r.destination_club || r.normalized_destination_club, r.destination_logo_url);
 
     return {
       ...r,
-      // certainty normalized
       decayed_certainty: normalizeCertainty(r),
       certainty_score: r.certainty_score === "" ? null : Number(r.certainty_score),
-      // keep URLs as provided
       origin_logo_url: normPath(r.origin_logo_url) || null,
       destination_logo_url: normPath(r.destination_logo_url) || null,
       player_image_url: normPath(r.player_image_url) || null,
@@ -406,13 +472,13 @@ function processRumors(rows) {
     return !( (noPlayer && noClubs) || tooMany );
   });
 
-  // Recompute Hotness
+  // Recompute hotness
   const raw = fixed.map(clusterRawScore);
   const m = mean(raw);
   const s = std(raw, m) || 1;
   fixed = fixed.map((r, i) => ({ ...r, hotness_score: zToHotness((raw[i] - m) / s) }));
 
-  // 7d Hotness
+  // 7-day hotness
   const now = new Date();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
   const raw7 = fixed.map(r => {
