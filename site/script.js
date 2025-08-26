@@ -2,32 +2,32 @@
    - Fetches final_rumors_clean.json (cache-busted)
    - Cleans & filters data (mega-bin guard, path fixes)
    - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Renders responsive cards with FEATURED TWEET selection (credibility + destination)
+   - Renders responsive cards with FEATURED TWEET selection (credibility + destination, STRICT)
 */
 
-/* =========================
-   Config & constants
-========================= */
-// Toggle data file via URL:  ?featured=1  -> use final_rumors_clean.featured.json
+//////////////////////////////
+// Config & constants
+//////////////////////////////
 const params = new URLSearchParams(location.search);
 const JSON_PATH = params.has("featured")
   ? "final_rumors_clean.featured.json"
   : "final_rumors_clean.json";
 
-// Optional URL flags:  ?rescore=1  or  ?nofeatured=1  to ignore pre-stamped featured_tweet_id
 const FORCE_RESCORE = params.has("rescore") || params.has("nofeatured");
 
-const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
-const MEGACLUSTER_TWEET_CAP = 80; // safety valve to drop junk clusters
-const TWITTER_EPOCH_MS = 1288834974657; // 2010-11-04
+// NEW: strict destination matching when a cluster has a destination
+const STRICT_DEST = !params.has("loosydest");
 
-// Fallback assets (update paths if yours differ)
+const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
+const MEGACLUSTER_TWEET_CAP = 80;
+const TWITTER_EPOCH_MS = 1288834974657;
+
 const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
 const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
-/* =========================
-   DOM handles
-========================= */
+//////////////////////////////
+// DOM
+//////////////////////////////
 const elCards        = document.getElementById("cards");
 const elSearch       = document.getElementById("searchInput");
 const elStatus       = document.getElementById("statusFilter");
@@ -38,12 +38,13 @@ const elTweetCount   = document.getElementById("tweetCount");
 const elCardTpl      = document.getElementById("card-template");
 const elBuildTag     = document.getElementById("buildTag");
 
-/* =========================
-   Utils
-========================= */
+//////////////////////////////
+// Utils
+//////////////////////////////
 const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
 const pad2     = n => String(n).padStart(2, "0");
+const toLower  = v => (v == null ? "" : String(v).trim().toLowerCase());
 
 const canonicalizeClub = s => {
   if (!s) return null;
@@ -60,9 +61,6 @@ const canonicalizeClub = s => {
   const key = String(s).trim().toLowerCase();
   return alias[key] ?? key;
 };
-
-const toLower = v => (v == null ? "" : String(v).trim().toLowerCase());
-const eqLower = (a,b) => toLower(a) === toLower(b);
 
 const snowflakeToDate = id => new Date(Number(BigInt(id) >> 22n) + TWITTER_EPOCH_MS);
 
@@ -85,7 +83,6 @@ const newestTweetDate = c => {
     const d = tweetDate(t);
     if (d && (!best || d > best)) best = d;
   }
-  // fallback to cluster-level timestamp if provided
   if (!best && c.last_seen_at) {
     const d = new Date(c.last_seen_at);
     if (!isNaN(d)) best = d;
@@ -100,7 +97,6 @@ const tweetEngagement = t => {
   const quotes     = safeNum(t.quotes ?? t.quote_count);
   const bookmarks  = safeNum(t.bookmarks ?? t.bookmark_count);
   const views      = safeNum(t.views ?? t.view_count ?? t.impressions ?? t.impression_count);
-  // log1p dampening to tame heavy tails
   return (
     W.likes     * Math.log1p(likes) +
     W.retweets  * Math.log1p(rts) +
@@ -124,23 +120,31 @@ const std  = (arr, m) => {
   return Math.sqrt(v);
 };
 
-// Left-censored normal-esque mapping (mean≈25, SD≈25, cap 100)
 const zToHotness = z => Math.max(0, Math.min(100, 25 + 25 * z));
 
-// Formatters
 const fmtPct  = x => (x == null || isNaN(x) ? "—" : `${Math.round(Number(x) * 100)}%`);
 const fmtHot  = x => (x == null || isNaN(x) ? "—" : Math.round(x));
-const fmtDate = d => {
-  if (!(d instanceof Date) || isNaN(d)) return "—";
-  return d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
-};
+const fmtDate = d => (!(d instanceof Date) || isNaN(d))
+  ? "—"
+  : d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-/* =========================
-   FEATURED TWEET RANKING
-   (Credibility + destination + single-player + recency/engagement)
-========================= */
+// robust <img> setter with fallback on 404/MIME errors
+function setSafeImage(imgEl, url, fallback) {
+  if (!imgEl) return;
+  imgEl.loading = "lazy";
+  imgEl.referrerPolicy = "no-referrer";
+  imgEl.onerror = () => {
+    if (imgEl.dataset.fallbackApplied !== "1") {
+      imgEl.dataset.fallbackApplied = "1";
+      imgEl.src = fallback;
+    }
+  };
+  imgEl.src = url || fallback;
+}
 
-// MITCHARD-tier weights (default for others = 0.6)
+//////////////////////////////
+// Featured tweet ranking
+//////////////////////////////
 const MITCHARD_WEIGHTS = {
   "@FabrizioRomano": 1.00,
   "@David_Ornstein": 0.99,
@@ -178,7 +182,6 @@ const getHandle = t => {
 };
 
 const isSinglePlayerTweet = t => {
-  // Accept a variety of flags if present; default true (defensive)
   const pc = t.player_count;
   if (pc != null) return Number(pc) === 1;
   if (t.hasOwnProperty("multi_player")) return !t.multi_player;
@@ -188,31 +191,30 @@ const isSinglePlayerTweet = t => {
 
 const samePlayerAsCluster = (t, c) => {
   const clusterPlayer = toLower(c.normalized_player_name || c.player || c.player_name || c.player_name_display);
-  if (!clusterPlayer) return true; // be permissive if unknown
+  if (!clusterPlayer) return true;
   const tweetPlayer = toLower(t.normalized_player_name || t.player || t.player_name);
   return tweetPlayer ? tweetPlayer === clusterPlayer : true;
 };
 
 const sameDestAsCluster = (t, c) => {
   const clusterDest = toLower(c.destination_club || c.normalized_destination_club);
-  if (!clusterDest) return true; // allow when cluster has no consensus
+  if (!clusterDest) return true; // only enforce when cluster has a destination
   const tweetDest = toLower(t.destination_club || t.dest_club || t.normalized_destination_club);
-  return tweetDest ? tweetDest === clusterDest : false;
+  if (!tweetDest) return false;  // STRICT: unknown tweet destination ≠ match
+  return tweetDest === clusterDest;
 };
 
 const isDenialTweet = t => {
-  // Use explicit flags if present; otherwise very light heuristic on text
   if (t.is_denial != null) return !!t.is_denial;
   const txt = toLower(t.tweet_text || "");
   const patterns = [
-    "deal off", "not joining", "no longer in talks", "no agreement", "not happening",
-    "denies", "denied", "rejects", "ruled out", "won't join", "will not join"
+    "deal off","not joining","no longer in talks","no agreement","not happening",
+    "denies","denied","rejects","ruled out","won't join","will not join"
   ];
   return patterns.some(p => txt.includes(p));
 };
 
 function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
-  // Filter guard (we'll apply stricter filters before calling score)
   if (!t) return -Infinity;
 
   const handle = getHandle(t);
@@ -232,9 +234,8 @@ function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
 
   const d = tweetDate(t);
   const ageDays = d ? (nowMs - d.getTime()) / 86400000 : 0;
-  const recency = Math.exp(-(isNaN(ageDays) ? 0 : ageDays) / 21); // ~3-week half-life-ish
+  const recency = Math.exp(-(isNaN(ageDays) ? 0 : ageDays) / 21);
 
-  // If denials aren't allowed here, strongly penalize
   const denialPenalty = (!allowDenial && isDenialTweet(t)) ? 0.25 : 1.0;
 
   return (5*cred + 4*bin + 2*dest + 1.5*single + 0.5*eng) * recency * denialPenalty;
@@ -248,31 +249,29 @@ function pickFeaturedTweet(cluster) {
   const status = cluster.status_bin || "Linked";
   const allowDenial = (status === "No Shot");
 
-  // Respect precomputed selection if present & not forcing rescore
+  // Respect pre-selection unless rescore forced
   if (cluster.featured_tweet_id && !FORCE_RESCORE) {
     const t = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
-    if (t) return t;
+    if (t && (!STRICT_DEST || sameDestAsCluster(t, cluster))) return t;
   }
 
-  // Hard filters — strictest first
+  const hasClusterDest = !!toLower(cluster.destination_club || cluster.normalized_destination_club);
+  const requireDest = (t) => !STRICT_DEST || !hasClusterDest || sameDestAsCluster(t, cluster);
+
+  // Ordered filters
   const passes = [
-    // 1) same player + same destination + single-player + (denials only if No Shot)
-    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    // 2) same player + same destination
-    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
-    // 3) same player + single-player
-    t => samePlayerAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    // 4) same player
-    t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
-    // 5) anything
-    t => allowDenial || !isDenialTweet(t)
+    t => samePlayerAsCluster(t, cluster) && requireDest(t) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && requireDest(t) && (allowDenial || !isDenialTweet(t)),
+    // Below would have ignored destination — now requireDest() keeps them aligned if cluster has one
+    t => samePlayerAsCluster(t, cluster) && requireDest(t) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && requireDest(t) && (allowDenial || !isDenialTweet(t)),
+    t => requireDest(t) && (allowDenial || !isDenialTweet(t)),
   ];
 
   for (const keep of passes) {
     const pool = tweets.filter(keep);
     if (!pool.length) continue;
 
-    // Score & deterministic tiebreaks
     pool.sort((a,b) => {
       const s = _scoreTweetForCluster(b, cluster, allowDenial, now) - _scoreTweetForCluster(a, cluster, allowDenial, now);
       if (s !== 0) return s;
@@ -286,31 +285,20 @@ function pickFeaturedTweet(cluster) {
     return pool[0] || null;
   }
 
-  return tweets[0] || null;
+  return null;
 }
 
-// Legacy helper used for "latest seen" fallback
-const topTweetByEngagement = c => {
-  const arr = Array.isArray(c.tweets) ? c.tweets : [];
-  if (!arr.length) return null;
-  let best = null, bestScore = -Infinity;
-  for (const t of arr) {
-    const score = tweetEngagement(t);
-    const d = tweetDate(t);
-    if (score > bestScore || (score === bestScore && d && best && d > tweetDate(best))) {
-      best = t; bestScore = score;
-    }
-  }
-  return best;
-};
-
-/* =========================
-   Data processing
-========================= */
+//////////////////////////////
+// Data processing
+//////////////////////////////
 function processRumors(rows) {
-  // Normalize core fields, coerce, and fix per-tweet fields
   let fixed = rows.map(r => {
-    const certainty = r.certainty_score === "" ? null : Number(r.certainty_score);
+    // certainty + “Confirmed → 1.0” guard
+    let certainty = r.certainty_score === "" ? null : Number(r.certainty_score);
+    if (r.status_bin === "Confirmed" && (!Number.isFinite(certainty) || certainty < 0.95)) {
+      certainty = 1.0;
+    }
+
     const tweets = Array.isArray(r.tweets) ? r.tweets.map(t => {
       const d = tweetDate(t);
       return {
@@ -331,7 +319,7 @@ function processRumors(rows) {
     return {
       ...r,
       certainty_score: certainty,
-      decayed_certainty: certainty, // (option: apply decay later)
+      decayed_certainty: certainty,
       origin_logo_url: normPath(r.origin_logo_url) || null,
       destination_logo_url: normPath(r.destination_logo_url) || null,
       player_image_url: normPath(r.player_image_url) || null,
@@ -341,7 +329,7 @@ function processRumors(rows) {
     };
   });
 
-  // Filter out the mega-bin (empty player + empty clubs) & any absurd clusters
+  // drop mega-bin & absurd clusters
   fixed = fixed.filter(c => {
     const noPlayer = !(c.normalized_player_name && String(c.normalized_player_name).trim());
     const noClubs  = !(c.origin_club && String(c.origin_club).trim()) &&
@@ -350,13 +338,13 @@ function processRumors(rows) {
     return !( (noPlayer && noClubs) || tooMany );
   });
 
-  // Recompute overall hotness
+  // hotness overall
   const raw = fixed.map(clusterRawScore);
   const m = mean(raw);
   const s = std(raw, m) || 1;
   fixed = fixed.map((r, i) => ({ ...r, hotness_score: zToHotness((raw[i] - m) / s) }));
 
-  // Compute 7-day hotness (fallback to overall if sparse)
+  // hotness 7d
   const now = new Date();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
   const raw7 = fixed.map(r => {
@@ -379,7 +367,7 @@ function processRumors(rows) {
     fixed = fixed.map(r => ({ ...r, hotness_7d: r.hotness_score }));
   }
 
-  // Image fallbacks
+  // Image fallbacks are applied at render-time via onerror; keep original URLs here
   fixed = fixed.map(r => ({
     ...r,
     origin_logo_url: r.origin_logo_url || FALLBACK_CLUB_LOGO,
@@ -390,9 +378,9 @@ function processRumors(rows) {
   return fixed;
 }
 
-/* =========================
-   Rendering
-========================= */
+//////////////////////////////
+// Rendering
+//////////////////////////////
 function render(data) {
   // Summary
   elClusterCount.textContent = data.length.toLocaleString();
@@ -407,9 +395,8 @@ function render(data) {
     const node = elCardTpl.content.cloneNode(true);
     const $ = sel => node.querySelector(sel);
 
-    // Header
-    const img = $(".player-img");
-    if (img) img.src = c.player_image_url;
+    // Header & images (robust)
+    setSafeImage($(".player-img"), c.player_image_url, FALLBACK_PLAYER_IMG);
 
     const nm = $(".player-name");
     if (nm) nm.textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
@@ -421,11 +408,9 @@ function render(data) {
       pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
     }
 
-    // Clubs
-    const ologo = $(".origin-logo");
-    const dlogo = $(".destination-logo");
-    if (ologo) ologo.src = c.origin_logo_url;
-    if (dlogo) dlogo.src = c.destination_logo_url;
+    // Clubs (robust logos)
+    setSafeImage($(".origin-logo"), c.origin_logo_url, FALLBACK_CLUB_LOGO);
+    setSafeImage($(".destination-logo"), c.destination_logo_url, FALLBACK_CLUB_LOGO);
 
     const oname = $(".origin-name");
     const dname = $(".destination-name");
@@ -439,12 +424,11 @@ function render(data) {
     if (hv) hv.textContent = fmtHot(use7d ? c.hotness_7d : c.hotness_score);
     if (cv) cv.textContent = fmtPct(c.decayed_certainty ?? c.certainty_score);
 
-    // Last seen = newest tweet date in cluster (robust)
+    // Last seen
     const ld = $(".last-seen");
-    const newestDate = newestTweetDate(c);
-    if (ld) ld.textContent = fmtDate(newestDate);
+    if (ld) ld.textContent = fmtDate(newestTweetDate(c));
 
-    // Featured Tweet (new logic, guarded + show/hide)
+    // Featured Tweet (strict dest + guarded)
     const t = pickFeaturedTweet(c);
     const ft   = $(".featured-tweet");
     const link = $(".tweet-link");
@@ -472,9 +456,9 @@ function render(data) {
   elCards.appendChild(frag);
 }
 
-/* =========================
-   Filtering & sorting
-========================= */
+//////////////////////////////
+// Filters & boot
+//////////////////////////////
 function applyFilters(rows) {
   const q = (elSearch.value || "").trim().toLowerCase();
   const status = elStatus.value;
@@ -496,27 +480,19 @@ function applyFilters(rows) {
     out = out.filter(c => String(c.status_bin).toLowerCase() === status.toLowerCase());
   }
 
-  // Sort
   const key = elSort.value || "hotness";
   const use7d = elUse7d && elUse7d.checked;
   const cmp = {
-    hotness: (a, b) => (use7d ? b.hotness_7d - a.hotness_7d : b.hotness_score - a.hotness_score),
+    hotness:   (a, b) => (use7d ? b.hotness_7d - a.hotness_7d : b.hotness_score - a.hotness_score),
     certainty: (a, b) => (b.decayed_certainty ?? b.certainty_score ?? 0) - (a.decayed_certainty ?? a.certainty_score ?? 0),
-    date: (a, b) => {
-      const ad = newestTweetDate(a);
-      const bd = newestTweetDate(b);
-      return (bd ? bd.getTime() : 0) - (ad ? ad.getTime() : 0);
-    },
-    name: (a, b) => (a.player_name_display || a.normalized_player_name || "").localeCompare(b.player_name_display || b.normalized_player_name || "")
+    date:      (a, b) => (newestTweetDate(b)?.getTime() || 0) - (newestTweetDate(a)?.getTime() || 0),
+    name:      (a, b) => (a.player_name_display || a.normalized_player_name || "")
+                          .localeCompare(b.player_name_display || b.normalized_player_name || "")
   }[key];
 
-  out = out.slice().sort(cmp);
-  return out;
+  return out.slice().sort(cmp);
 }
 
-/* =========================
-   Boot
-========================= */
 (async function init() {
   const now = new Date();
   const bust = (window.APP_BUILD || `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}-${Date.now()}`);
@@ -525,16 +501,13 @@ function applyFilters(rows) {
   const res = await fetch(`${JSON_PATH}?v=${encodeURIComponent(bust)}`, { cache: "no-store" });
   const raw = await res.json();
 
-  // Process & render
-  window._rawRumors = raw; // for console debugging
+  window._rawRumors = raw;
   const ready = processRumors(raw);
   window._rumors = ready;
 
   const draw = () => render(applyFilters(ready));
-  // initial render
   draw();
 
-  // interactions
   if (elSearch) elSearch.addEventListener("input", draw);
   if (elStatus) elStatus.addEventListener("change", draw);
   if (elUse7d)  elUse7d.addEventListener("change", draw);
