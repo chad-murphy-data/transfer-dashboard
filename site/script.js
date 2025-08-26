@@ -2,7 +2,8 @@
    - Fetches final_rumors_clean.json (cache-busted)
    - Cleans & filters data (mega-bin guard, path fixes)
    - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Renders cards, with header destination mirroring the featured tweet
+   - Renders cards; featured tweet picked with CONFIDENCE-FIRST logic
+   - Card destination mirrors featured tweet when available
 */
 
 //////////////////////////////
@@ -20,6 +21,7 @@ const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5
 const MEGACLUSTER_TWEET_CAP = 80;
 const TWITTER_EPOCH_MS = 1288834974657;
 
+// Fallback assets (keep paths as in your repo)
 const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
 const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
@@ -43,6 +45,14 @@ const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
 const pad2     = n => String(n).padStart(2, "0");
 const toLower  = v => (v == null ? "" : String(v).trim().toLowerCase());
+
+// Normalize club strings for fuzzy compare (“FC”, punctuation, etc.)
+const clubKey = s => String(s || "")
+  .toLowerCase()
+  .replace(/[^\w\s]/g, " ")
+  .replace(/\b(fc|cf|afc|sc|ssc|ac|bk)\b/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
 
 const snowflakeToDate = id => new Date(Number(BigInt(id) >> 22n) + TWITTER_EPOCH_MS);
 
@@ -110,7 +120,7 @@ const fmtDate = d => (!(d instanceof Date) || isNaN(d))
   ? "—"
   : d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-// Use JSON path as-is; only fall back on error (matches the version where headshots worked)
+// Image helper: use JSON URL as-is; swap to fallback on error (matches the version where headshots worked)
 function setSafeImage(imgEl, url, fallback) {
   if (!imgEl) return;
   const src = normPath(url) || fallback;
@@ -125,7 +135,7 @@ function setSafeImage(imgEl, url, fallback) {
 }
 
 //////////////////////////////
-// Featured-tweet ranking
+// FEATURED TWEET RANKING (Confidence-first)
 //////////////////////////////
 const MITCHARD_WEIGHTS = {
   "@FabrizioRomano": 1.00,
@@ -178,22 +188,6 @@ const samePlayerAsCluster = (t, c) => {
   return tweetPlayer ? tweetPlayer === clusterPlayer : true;
 };
 
-const clubKey = s => String(s || "")
-  .toLowerCase()
-  .replace(/[^\w\s]/g, " ")
-  .replace(/\b(fc|cf|afc|sc|ssc|ac|bk)\b/g, "")
-  .replace(/\s+/g, " ")
-  .trim();
-
-const sameDestAsCluster = (t, c) => {
-  const cd = c.destination_club || c.normalized_destination_club;
-  if (!cd) return true;
-  const td = t.destination_club || t.dest_club || t.normalized_destination_club;
-  if (!td) return false;
-  const A = clubKey(cd), B = clubKey(td);
-  return A === B || A.includes(B) || B.includes(A);
-};
-
 const isDenialTweet = t => {
   if (t.is_denial != null) return !!t.is_denial;
   const txt = toLower(t.tweet_text || "");
@@ -204,11 +198,62 @@ const isDenialTweet = t => {
   return patterns.some(p => txt.includes(p));
 };
 
+// Textual confidence classifier
+function confidenceFromText(t) {
+  const txt = toLower(t.tweet_text || "");
+  let s = 0.30;
+  const bump = (re, val) => { if (re.test(txt)) s = Math.max(s, val); };
+
+  // Tier 1: here-we-go / official / full agreement
+  bump(/\bhere we go\b/, 1.00);
+  bump(/\bofficial\b|\bofficially\b/, 0.98);
+  bump(/\b(full|total)\s+agreement\b|\bagreement (reached|in place)\b/, 0.96);
+  bump(/\bpaperwork\b.*(signed|completed)|\bsigning\b|\bsigned\b/, 0.95);
+  bump(/\bmedical\b.*(completed|done)|\bshirt number\b|\bunveiled\b/, 0.94);
+
+  // Tier 2
+  bump(/\bimminent\b|\bset to join\b|\bvery close\b|\bclose to\b/, 0.90);
+  bump(/\badvanced (talks|negotiations)\b|\bverbal agreement\b/, 0.88);
+  bump(/\bfee\b.*(agreed|agreement)|\bdeal\b.*(agreed|in place)/, 0.86);
+
+  // Tier 3
+  bump(/\bbid (submitted|sent|made)\b|\boffer (made|sent|submitted)\b/, 0.78);
+  bump(/\bproposal\b|\bin (talks|negotiations)\b|\bcontacts\b/, 0.72);
+
+  // Low-confidence/linking
+  bump(/\binterest(ed)?\b|\bmonitor(ing|ed)\b|\blinked\b|\btarget\b/, 0.55);
+
+  // Denials sink
+  if (isDenialTweet(t)) s = Math.min(s, 0.15);
+
+  return s;
+}
+
+// Small nudges from destination alignment / club mentions (non-decisive)
+function destinationNudge(t, c) {
+  const cd = c.destination_club || c.normalized_destination_club || "";
+  const td = t.destination_club || t.dest_club || t.normalized_destination_club || "";
+  if (!cd && !td) return 0;
+  if (!cd || !td) return 0.03;
+  const A = clubKey(cd), B = clubKey(td);
+  if (A === B) return 0.12;
+  if (A.includes(B) || B.includes(A)) return 0.07;
+  return -0.08;
+}
+function clubMentionNudge(t) {
+  const td = t.destination_club || t.dest_club || t.normalized_destination_club || "";
+  if (!td) return 0;
+  const txt = toLower(t.tweet_text || "");
+  const k = clubKey(td);
+  return k && txt.includes(k) ? 0.05 : 0;
+}
+
 function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
   if (!t) return -Infinity;
+
   const cred = MITCHARD_WEIGHTS[getHandle(t)] ?? 0.60;
   const bin  = BIN_SCORE[c.status_bin] ?? 0.70;
-  const dest = sameDestAsCluster(t, c) ? 1 : 0;
+  const conf = confidenceFromText(t);
   const single = isSinglePlayerTweet(t) ? 1 : 0;
 
   const likes = safeNum(t.likes || t.favorite_count);
@@ -223,8 +268,11 @@ function _scoreTweetForCluster(t, c, allowDenial, nowMs) {
   const ageDays = d ? (nowMs - d.getTime()) / 86400000 : 0;
   const recency = Math.exp(-(isNaN(ageDays) ? 0 : ageDays) / 21);
 
-  const denialPenalty = (!allowDenial && isDenialTweet(t)) ? 0.25 : 1.0;
-  return (5*cred + 4*bin + 2*dest + 1.5*single + 0.5*eng) * recency * denialPenalty;
+  const denialPenalty = (!allowDenial && isDenialTweet(t)) ? 0.6 : 1.0;
+  const nudges = destinationNudge(t, c) + clubMentionNudge(t);
+
+  // Confidence dominates
+  return (10*conf + 4*cred + 3*bin + 1.2*single + 0.6*eng + 1.0*nudges) * recency * denialPenalty;
 }
 
 function pickFeaturedTweet(cluster) {
@@ -235,39 +283,28 @@ function pickFeaturedTweet(cluster) {
   const status = cluster.status_bin || "Linked";
   const allowDenial = (status === "No Shot");
 
-  // Honor pre-selection unless forced to rescore
+  // Honor pre-selection unless forced
   if (cluster.featured_tweet_id && !FORCE_RESCORE) {
-    const t = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
-    if (t) return t;
+    const preset = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
+    if (preset) return preset;
   }
 
-  // Try strict → relaxed filters so we still pick something good even if the cluster dest is stale
-  const passes = [
-    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
-    t => samePlayerAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
-    t => (allowDenial || !isDenialTweet(t))
-  ];
+  // Confidence-first: require same player only; destination differences are handled via nudges
+  const pool = tweets.filter(t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)));
+  if (!pool.length) return tweets[0] || null;
 
-  for (const keep of passes) {
-    const pool = tweets.filter(keep);
-    if (!pool.length) continue;
+  pool.sort((a,b) => {
+    const sb = _scoreTweetForCluster(b, cluster, allowDenial, now);
+    const sa = _scoreTweetForCluster(a, cluster, allowDenial, now);
+    if (sb !== sa) return sb - sa;
+    const dt = (tweetDate(b)?.getTime() || 0) - (tweetDate(a)?.getTime() || 0);
+    if (dt !== 0) return dt;
+    const eb = tweetEngagement(b), ea = tweetEngagement(a);
+    if (eb !== ea) return eb - ea;
+    return String(b.tweet_id).localeCompare(String(a.tweet_id));
+  });
 
-    pool.sort((a,b) => {
-      const s = _scoreTweetForCluster(b, cluster, allowDenial, now) - _scoreTweetForCluster(a, cluster, allowDenial, now);
-      if (s !== 0) return s;
-      const dt = (tweetDate(b)?.getTime() || 0) - (tweetDate(a)?.getTime() || 0);
-      if (dt !== 0) return dt;
-      const eb = tweetEngagement(b), ea = tweetEngagement(a);
-      if (eb !== ea) return eb - ea;
-      return String(b.tweet_id).localeCompare(String(a.tweet_id));
-    });
-
-    return pool[0] || null;
-  }
-
-  return null;
+  return pool[0] || null;
 }
 
 //////////////////////////////
@@ -307,7 +344,7 @@ function processRumors(rows) {
     };
   });
 
-  // Filter out mega-bin & absurd clusters
+  // Filter mega-bin & absurd clusters
   fixed = fixed.filter(c => {
     const noPlayer = !(c.normalized_player_name && String(c.normalized_player_name).trim());
     const noClubs  = !(c.origin_club && String(c.origin_club).trim()) &&
@@ -316,13 +353,13 @@ function processRumors(rows) {
     return !( (noPlayer && noClubs) || tooMany );
   });
 
-  // Recompute hotness (overall)
+  // Overall hotness
   const raw = fixed.map(clusterRawScore);
   const m = mean(raw);
   const s = std(raw, m) || 1;
   fixed = fixed.map((r, i) => ({ ...r, hotness_score: zToHotness((raw[i] - m) / s) }));
 
-  // 7d hotness
+  // 7-day hotness
   const now = new Date();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
   const raw7 = fixed.map(r => {
@@ -379,7 +416,7 @@ function render(data) {
       pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
     }
 
-    // Pick the featured tweet *before* writing club labels, so we can mirror its destination
+    // Pick featured tweet BEFORE writing club labels so we can mirror its destination
     const t = pickFeaturedTweet(c);
 
     // Clubs: origin from cluster; destination prefers featured tweet (name + logo if provided)
@@ -406,7 +443,7 @@ function render(data) {
     const ld = $(".last-seen");
     if (ld) ld.textContent = fmtDate(newestTweetDate(c));
 
-    // Featured Tweet block (render)
+    // Featured Tweet block
     const ft   = $(".featured-tweet");
     const link = $(".tweet-link");
     const text = $(".tweet-text");
@@ -485,8 +522,8 @@ function applyFilters(rows) {
   const draw = () => render(applyFilters(ready));
   draw();
 
-  if (elSearch) elSearch.addEventListener("input", draw);
-  if (elStatus) elStatus.addEventListener("change", draw);
-  if (elUse7d)  elUse7d.addEventListener("change", draw);
-  if (elSort)   elSort.addEventListener("change", draw);
+  elSearch?.addEventListener("input", draw);
+  elStatus?.addEventListener("change", draw);
+  elUse7d?.addEventListener("change", draw);
+  elSort?.addEventListener("change", draw);
 })();
