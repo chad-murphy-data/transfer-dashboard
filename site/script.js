@@ -2,7 +2,7 @@
    - Fetches final_rumors_clean.json (cache-busted)
    - Cleans & filters data (mega-bin guard, path fixes)
    - Recomputes Hotness (left-censored normal, mean≈25, SD≈25, cap 100)
-   - Renders responsive cards with FEATURED TWEET selection (credibility + destination, STRICT)
+   - Renders responsive cards with FEATURED TWEET selection
 */
 
 //////////////////////////////
@@ -15,14 +15,13 @@ const JSON_PATH = params.has("featured")
 
 // Optional URL flags
 const FORCE_RESCORE = params.has("rescore") || params.has("nofeatured");
-// STRICT destination matching unless ?loosydest is present
-const STRICT_DEST = !params.has("loosydest");
 
+// weights for engagement proxy
 const W = { likes: 1.0, retweets: 2.0, replies: 1.5, quotes: 1.8, bookmarks: 0.5, views: 0.01 };
 const MEGACLUSTER_TWEET_CAP = 80;
 const TWITTER_EPOCH_MS = 1288834974657;
 
-// Fallback assets (relative to /site/)
+// Fallback assets (keep exactly where they are in your repo)
 const FALLBACK_PLAYER_IMG = "assets/ui/defaults/player_silhouette.png";
 const FALLBACK_CLUB_LOGO  = "assets/ui/defaults/club_placeholder.png";
 
@@ -46,6 +45,14 @@ const safeNum  = x => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const normPath = p => (typeof p === "string" ? p.replaceAll("\\", "/") : null);
 const pad2     = n => String(n).padStart(2, "0");
 const toLower  = v => (v == null ? "" : String(v).trim().toLowerCase());
+
+// For labels like “FC”, “CF”, etc.
+const clubKey = s => String(s || "")
+  .toLowerCase()
+  .replace(/[^\w\s]/g, " ")
+  .replace(/\b(fc|cf|afc|sc|ssc|ac|bk)\b/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
 
 const snowflakeToDate = id => new Date(Number(BigInt(id) >> 22n) + TWITTER_EPOCH_MS);
 
@@ -113,46 +120,13 @@ const fmtDate = d => (!(d instanceof Date) || isNaN(d))
   ? "—"
   : d.toLocaleString(undefined, { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-//////////////////////////////
-// Path fixers for local assets
-//////////////////////////////
-function coerceLocalPlayerImg(url) {
-  // normalize slashes & strip leading /site/ or ./ etc.
-  let u = normPath(url || "");
-  if (/^https?:/i.test(u)) return u; // allow absolute URLs if present
-
-  u = u.replace(/^\.?\/*/, "").replace(/^site\//i, "");
-  // keep just filename if nested
-  const fname = u.split("/").pop() || "";
-  // ensure we point into our repo folder
-  let candidate = `assets/player_images/${fname}`;
-  // add extension if missing
-  if (!/\.(png|jpe?g|webp|avif)$/i.test(candidate)) candidate += ".jpg";
-  return candidate;
-}
-
-function coerceLocalLogo(url, kind /* 'origin' | 'dest' */) {
-  let u = normPath(url || "");
-  if (/^https?:/i.test(u)) return u;
-  u = u.replace(/^\.?\/*/, "").replace(/^site\//i, "");
-  const fname = u.split("/").pop() || "";
-  let candidate = `assets/logos/${fname}`;
-  if (!/\.(png|jpe?g|webp|svg)$/i.test(candidate)) candidate += ".png";
-  return candidate;
-}
-
 // robust <img> setter with fallback on 404/MIME errors
 function setSafeImage(imgEl, url, fallback) {
   if (!imgEl) return;
+  const src = normPath(url) || fallback;
   imgEl.loading = "lazy";
-  imgEl.referrerPolicy = "no-referrer";
-  imgEl.onerror = () => {
-    if (imgEl.dataset.fallbackApplied !== "1") {
-      imgEl.dataset.fallbackApplied = "1";
-      imgEl.src = fallback;
-    }
-  };
-  imgEl.src = url || fallback;
+  imgEl.onerror = () => { if (imgEl.src !== location.origin + "/" + fallback && !imgEl.dataset.fallbackApplied) { imgEl.dataset.fallbackApplied = "1"; imgEl.src = fallback; } };
+  imgEl.src = src;
 }
 
 //////////////////////////////
@@ -202,31 +176,22 @@ const isSinglePlayerTweet = t => {
   return true;
 };
 
-// loose-but-robust club comparator (handles “FC”, “CF”, etc.)
-const clubKey = s => String(s || "")
-  .toLowerCase()
-  .replace(/[^\w\s]/g, " ")         // strip punctuation
-  .replace(/\b(fc|cf|afc|sc|ssc|ac|bk)\b/g, "") // drop common suffixes
-  .replace(/\s+/g, " ")
-  .trim();
-
-function samePlayerAsCluster(t, c) {
-  const clusterPlayer = (c.player_name_display || c.normalized_player_name || c.player || c.player_name || "").trim().toLowerCase();
-  const tweetPlayer   = (t.normalized_player_name || t.player || t.player_name || "").trim().toLowerCase();
+const samePlayerAsCluster = (t, c) => {
+  const clusterPlayer = toLower(c.normalized_player_name || c.player || c.player_name || c.player_name_display);
   if (!clusterPlayer) return true;
-  if (!tweetPlayer)   return true; // permissive if tweet missing
-  return clusterPlayer === tweetPlayer;
-}
+  const tweetPlayer = toLower(t.normalized_player_name || t.player || t.player_name);
+  return tweetPlayer ? tweetPlayer === clusterPlayer : true;
+};
 
-function sameDestAsCluster(t, c) {
-  const clusterDestRaw = c.destination_club || c.normalized_destination_club;
-  if (!clusterDestRaw) return true;          // no cluster dest ⇒ don't enforce
-  const tweetDestRaw = t.destination_club || t.dest_club || t.normalized_destination_club;
-  if (!tweetDestRaw)  return false;          // cluster has dest but tweet doesn't ⇒ fail
-  const A = clubKey(clusterDestRaw);
-  const B = clubKey(tweetDestRaw);
-  return A === B || A.includes(B) || B.includes(A);
-}
+const sameDestAsCluster = (t, c) => {
+  const clusterDest = c.destination_club || c.normalized_destination_club;
+  if (!clusterDest) return true;
+  const tweetDest = t.destination_club || t.dest_club || t.normalized_destination_club;
+  if (!tweetDest) return false;
+  return clubKey(clusterDest) === clubKey(tweetDest) ||
+         clubKey(clusterDest).includes(clubKey(tweetDest)) ||
+         clubKey(tweetDest).includes(clubKey(clusterDest));
+};
 
 const isDenialTweet = t => {
   if (t.is_denial != null) return !!t.is_denial;
@@ -273,24 +238,18 @@ function pickFeaturedTweet(cluster) {
   const status = cluster.status_bin || "Linked";
   const allowDenial = (status === "No Shot");
 
-  // Respect pre-selection unless rescore forced, *and* dest matches in STRICT mode
+  // Respect pre-selection unless rescore forced
   if (cluster.featured_tweet_id && !FORCE_RESCORE) {
     const t = tweets.find(x => String(x.tweet_id) === String(cluster.featured_tweet_id));
-    if (!t) { /* fall through */ }
-    else if (!STRICT_DEST || sameDestAsCluster(t, cluster)) return t;
+    if (t) return t;
   }
 
-  const hasClusterDest = !!(cluster.destination_club || cluster.normalized_destination_club);
-  const requireDest = (t) => !STRICT_DEST || !hasClusterDest || sameDestAsCluster(t, cluster);
-
   const passes = [
-    // strictest
-    t => samePlayerAsCluster(t, cluster) && requireDest(t) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    t => samePlayerAsCluster(t, cluster) && requireDest(t) && (allowDenial || !isDenialTweet(t)),
-    // relaxed (still requireDest if cluster has one)
-    t => samePlayerAsCluster(t, cluster) && requireDest(t) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
-    t => samePlayerAsCluster(t, cluster) && requireDest(t) && (allowDenial || !isDenialTweet(t)),
-    t => requireDest(t) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && sameDestAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && isSinglePlayerTweet(t) && (allowDenial || !isDenialTweet(t)),
+    t => samePlayerAsCluster(t, cluster) && (allowDenial || !isDenialTweet(t)),
+    t => (allowDenial || !isDenialTweet(t))
   ];
 
   for (const keep of passes) {
@@ -310,7 +269,7 @@ function pickFeaturedTweet(cluster) {
     return pool[0] || null;
   }
 
-  return null; // if nothing matches, hide the featured block
+  return null;
 }
 
 //////////////////////////////
@@ -318,12 +277,7 @@ function pickFeaturedTweet(cluster) {
 //////////////////////////////
 function processRumors(rows) {
   let fixed = rows.map(r => {
-    // certainty: force 1.0 for Confirmed if missing/low
-    let certainty = r.certainty_score === "" ? null : Number(r.certainty_score);
-    if (r.status_bin === "Confirmed" && (!Number.isFinite(certainty) || certainty < 0.95)) {
-      certainty = 1.0;
-    }
-
+    const certainty = r.certainty_score === "" ? null : Number(r.certainty_score);
     const tweets = Array.isArray(r.tweets) ? r.tweets.map(t => {
       const d = tweetDate(t);
       return {
@@ -345,13 +299,11 @@ function processRumors(rows) {
       ...r,
       certainty_score: certainty,
       decayed_certainty: certainty,
-      // keep original strings (we'll coerce at render-time)
       origin_logo_url: normPath(r.origin_logo_url) || null,
       destination_logo_url: normPath(r.destination_logo_url) || null,
       player_image_url: normPath(r.player_image_url) || null,
-      // normalized names (used in search/sort only)
-      normalized_destination_club: toLower(r.normalized_destination_club || r.destination_club),
-      normalized_origin_club: toLower(r.normalized_origin_club || r.origin_club),
+      normalized_destination_club: r.normalized_destination_club || r.destination_club || null,
+      normalized_origin_club: r.normalized_origin_club || r.origin_club || null,
       tweets
     };
   });
@@ -394,6 +346,14 @@ function processRumors(rows) {
     fixed = fixed.map(r => ({ ...r, hotness_7d: r.hotness_score }));
   }
 
+  // keep URLs as provided; fallbacks happen at render time
+  fixed = fixed.map(r => ({
+    ...r,
+    origin_logo_url: r.origin_logo_url || FALLBACK_CLUB_LOGO,
+    destination_logo_url: r.destination_logo_url || FALLBACK_CLUB_LOGO,
+    player_image_url: r.player_image_url || FALLBACK_PLAYER_IMG,
+  }));
+
   return fixed;
 }
 
@@ -414,8 +374,8 @@ function render(data) {
     const node = elCardTpl.content.cloneNode(true);
     const $ = sel => node.querySelector(sel);
 
-    // Header & images (robust with path coercion)
-    setSafeImage($(".player-img"), coerceLocalPlayerImg(c.player_image_url), FALLBACK_PLAYER_IMG);
+    // Header & images (use URLs exactly as in JSON; only fallback on error)
+    setSafeImage($(".player-img"), c.player_image_url, FALLBACK_PLAYER_IMG);
 
     const nm = $(".player-name");
     if (nm) nm.textContent = c.player_name_display || c.normalized_player_name || "Unknown player";
@@ -427,9 +387,9 @@ function render(data) {
       pill.className = `status-pill status-${String(status).toLowerCase().replace(/\s+/g, "-")}`;
     }
 
-    // Clubs (robust logos)
-    setSafeImage($(".origin-logo"),      coerceLocalLogo(c.origin_logo_url, 'origin'),      FALLBACK_CLUB_LOGO);
-    setSafeImage($(".destination-logo"), coerceLocalLogo(c.destination_logo_url, 'dest'),    FALLBACK_CLUB_LOGO);
+    // Clubs (use JSON-provided logos; only fallback on error)
+    setSafeImage($(".origin-logo"),      c.origin_logo_url,      FALLBACK_CLUB_LOGO);
+    setSafeImage($(".destination-logo"), c.destination_logo_url, FALLBACK_CLUB_LOGO);
 
     const oname = $(".origin-name");
     const dname = $(".destination-name");
@@ -447,7 +407,7 @@ function render(data) {
     const ld = $(".last-seen");
     if (ld) ld.textContent = fmtDate(newestTweetDate(c));
 
-    // Featured Tweet (strict dest + guarded)
+    // Featured Tweet
     const t = pickFeaturedTweet(c);
     const ft   = $(".featured-tweet");
     const link = $(".tweet-link");
@@ -464,6 +424,17 @@ function render(data) {
       put("quotes",    `❝ ${safeNum(t.quotes).toLocaleString()}`);
       put("bookmarks", `🔖 ${safeNum(t.bookmarks).toLocaleString()}`);
       put("views",     `👁 ${safeNum(t.views).toLocaleString()}`);
+
+      // >>> NEW: if the featured tweet has a destination that doesn't match the card,
+      // mirror it on the card so labels/logos don't contradict the tweet (KDB → Napoli).
+      const tweetDest = t.destination_club || t.dest_club || t.normalized_destination_club;
+      if (tweetDest && dname && clubKey(tweetDest) && clubKey(dname.textContent || "") !== clubKey(tweetDest)) {
+        dname.textContent = tweetDest; // show Napoli instead of Chicago Fire
+        // If your JSON carries per-tweet destination_logo_url, use it; otherwise leave logo as-is.
+        if (t.destination_logo_url) {
+          setSafeImage($(".destination-logo"), t.destination_logo_url, FALLBACK_CLUB_LOGO);
+        }
+      }
     } else if (ft) {
       ft.hidden = true;
       if (link) link.removeAttribute("href");
